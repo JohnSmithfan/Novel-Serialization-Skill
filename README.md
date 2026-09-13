@@ -1,0 +1,2 @@
+# GitHub Novel Serialization Skill
+
