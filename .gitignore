@@ -64,3 +64,6 @@ logs/
 
 # Dependency updates
 .pip-wheel-metadata/
+
+# Audit reports
+README_FOR_AI_Audit_Report*
