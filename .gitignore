@@ -57,6 +57,7 @@ temp/
 .agents/
 .env
 .env.local
+.workbuddy
 
 # Logs
 *.log
