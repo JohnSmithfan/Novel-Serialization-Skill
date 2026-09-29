@@ -105,6 +105,7 @@ updates rather than writing state directly, preserving role isolation (spec Sect
 
 Before publishing any chapter, ALL of the following gates must pass:
 
+- [ ] **Review gate** — `review_all.py` reports no `FAIL`; every `WARN` has been reviewed by a human
 - [ ] **Continuity consistency** — Character names, locations, timeline events match state files
 - [ ] **Style consistency** — Voice, tense, register match established style rules
 - [ ] **Plot logic** — Causality holds; motivations are clear; foreshadowing payoffs are tracked
@@ -123,7 +124,8 @@ Before publishing any chapter, ALL of the following gates must pass:
 - **Implementation Prompt**: `prompts/01-implement-method.md` — full novel generation prompt template
 - **Robustness Checks**: `prompts/02-robustness-checks.md` — multi-dimensional quality check prompt
 - **Prompt Usage Guide**: `prompts/README.md` — how to use dual-mode prompt templates
-- **Project Infrastructure**: `LICENSE`, `LICENSES/CC-BY-NC-SA-4.0.txt`, `CHANGELOG.md`, `.gitignore`, `.editorconfig`, `.github/workflows/novel-release.yml`, `CODE_OF_CONDUCT.md`, `CONTRIBUTING.md`, `SECURITY.md`, `.github/PULL_REQUEST_TEMPLATE.md`
+- **Shared Scripts**: `scripts/README.md` — catalog and invocation conventions for `humanizer_check.py` (de-AI-tone gate), `_list_hits.py`, `_promote_draft.py` (draft→release sync), `_sync_draft.py` (errata write-back), and the **review gate family**: `review_all.py` (all-in-one review report), `review_scale.py` (word-count), `review_continuity.py` (cross-chapter consistency), `review_rationality.py` (plot logic), `review_punctuation.py` (punctuation & orthography), backed by `_review_lib.py`. Scripts live in this repo only; invoke them from the subproject root.
+- **Subprojects**: `SUBPROJECTS.md` — registered independent novel subprojects (own git repo and remote), their locations and which scripts they consume.
 
 ## Constraints & Boundaries
 

@@ -122,6 +122,20 @@ github-novel-serialization-skill/
 +-- CONTRIBUTING.md                     # Contribution guidelines
 +-- SECURITY.md                         # Security policy
 +-- CHANGELOG.md                        # Version history
++-- SUBPROJECTS.md                      # Registered independent novel subprojects
+|
++-- scripts/                            # Shared automation scripts (consumed by subprojects)
+|   +-- README.md                       # Script catalog & invocation conventions
+|   +-- humanizer_check.py              # De-AI-tone self-check (PASS/WARN/FAIL)
+|   +-- _list_hits.py                   # List flagged sentences for manual rewrite
+|   +-- _promote_draft.py               # Draft -> release sync (snapshot, gates)
+|   +-- _sync_draft.py                  # Release -> draft write-back (errata only)
+|   +-- review_all.py                   # All-in-one review: every gate, one report
+|   +-- review_scale.py                 # Scale review (word-count targets & gaps)
+|   +-- review_continuity.py            # Consistency review (names, timeline, titles)
+|   +-- review_rationality.py           # Rationality review (logic, pacing, outline cover)
+|   +-- review_punctuation.py           # Punctuation & orthography review
+|   +-- _review_lib.py                  # Shared library for the review scripts
 |
 +-- references/                         # Deep documentation & templates
 |   +-- method-patterns.md              # Master template file
@@ -179,6 +193,21 @@ github-novel-serialization-skill/
 | **continuity-check** | Verify consistency across all chapters and state files (plot holes, timeline errors) |
 | **publishing-workflow** | Manage Git-based publishing pipeline (tagging, releases, automated checks) |
 | **continuity-tracker** | Maintain persistent state files (timeline, character states, thread ledger) |
+
+---
+
+## Subprojects
+
+Concrete novels live as **independent subprojects** — each keeps its own git repository and remote,
+commits and releases on its own, and only borrows shared capability (scripts) from this repo.
+
+| Subproject | Location | Remote | Scripts |
+|------------|----------|--------|---------|
+| **-1928** (《奉天1928》, Republican-era Northeast alternate history) | `C:\Users\Admin\-1928` | `https://github.com/JohnSmithfan/-1928.git` | `scripts/humanizer_check.py`, `_list_hits.py`, `_promote_draft.py`, `_sync_draft.py`, `review_all.py`, `review_scale.py`, `review_continuity.py`, `review_rationality.py`, `review_punctuation.py` |
+
+Rules: scripts stay in this repo's `scripts/` (never copied into a subproject as `tools/`), and are
+invoked from the subproject root — the subproject root is the script's working directory.
+See [SUBPROJECTS.md](SUBPROJECTS.md) and [scripts/README.md](scripts/README.md).
 
 ---
 

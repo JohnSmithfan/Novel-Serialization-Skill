@@ -21,6 +21,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `references/method-patterns-publishing.md`: documented the frontmatter-vs-CC-header ordering
 - `references/examples/example-chapter-draft.md`: added the mandatory YAML frontmatter
 - `README_FOR_AI_Audit_Report_Round3.md`: cross-document consistency audit (6 further defects)
+- `scripts/` (shared automation, consumed by novel subprojects): `humanizer_check.py`
+  (de-AI-tone gate: AI-tone density, structural/abstract clichés, vague adverbs, emotion labels,
+  formulaic patterns, ending-elevation, idiom runs, punctuation density, paragraph-length CV —
+  PASS/WARN/FAIL), `_list_hits.py` (lists flagged sentences for manual rewrite),
+  `_promote_draft.py` (draft → release sync with pre-write snapshot, word-count diff, zero-diff
+  chapter-title check, humanizer gate), `_sync_draft.py` (release → draft write-back, errata only),
+  plus `scripts/README.md` documenting invocation conventions
+- `SUBPROJECTS.md`: registry of independent novel subprojects (own git repo and remote) —
+  currently `-1928` (《奉天1928》) — and the rule that scripts stay in this repo, never copied
+  into a subproject as `tools/`
+- `README.md`: `scripts/` and `SUBPROJECTS.md` added to the directory structure, plus a
+  Subprojects section; `SKILL.md` cross-references both
+- `scripts/_promote_draft.py`: project root resolved from the current working directory
+  (new `--root` flag) instead of the script's parent directory; `humanizer_check.py` located
+  relative to the script's own directory, so the script works from any subproject
+- `scripts/`: review-gate script family — `review_all.py` (runs every gate in one pass and emits a
+  single review report: verdict table, issue detail, scale overview, TODO list, sign-off block),
+  `review_scale.py` (per-chapter word count vs target, pass rate, gap ranking),
+  `review_continuity.py` (name variants, character age vs dossier, timeline reversal,
+  title/body mismatch, timeline entries, draft-vs-release title parity),
+  `review_rationality.py` (duplicate paragraphs, paragraph shape, dialogue ratio, ordinal gaps,
+  POV drift, unresolved foreshadowing, outline coverage), `review_punctuation.py` (quote pairing,
+  half-width punctuation, straight quotes, traditional-character leaks, stray English, punctuation
+  density), plus the shared `_review_lib.py`. All accept `--root`, `--chapters`, `--draft`, `--out`
+  and work with both `ch-001-title.md` and `第NNN章 标题.md` naming; thresholds were calibrated
+  against real manuscript text to keep false positives low
 
 ### Changed
 - `modules/` restructured to `modules/<name>/SKILL.md` per spec Sections 1 and 5.2
