@@ -19,7 +19,7 @@ cd "C:/Users/Admin/-1928"
 
 # 去 AI 痕迹自检
 python "../GitHub Novel Serialization Skill/scripts/humanizer_check.py" chapters/
-python "../GitHub Novel Serialization Skill/scripts/humanizer_check.py" notes-personal/第一卷正文草稿.md
+python "../GitHub Novel Serialization Skill/scripts/humanizer_check.py" notes-personal/正文草稿.md
 
 # 列出待改写命中句
 python "../GitHub Novel Serialization Skill/scripts/_list_hits.py" --kind vague --target chapters/
@@ -58,6 +58,31 @@ python "../GitHub Novel Serialization Skill/scripts/review_punctuation.py"
 | `review_rationality.py` | **合理化审查**：重复段落（章内／跨章）、超长段与残句、对话占比、序数跳号、视角混用、伏笔未回收、大纲要点偏离 | `--outline`、`--max-para`、`--max-dialogue`、`--min-cover`、`--out` |
 | `review_punctuation.py` | **标点审查**：引号错位、半角标点、直引号、繁体混入、英文残留、标点密度、重复与行首标点、书名号配对 | `--max-dash`、`--max-ellipsis`、`--max-excl`、`--out` |
 | `_review_lib.py` | 审稿脚本公共库（内部模块，不直接执行）：项目根判定、章节索引、字数口径、报告渲染 | — |
+| `check_refs.py` | **引用体检**：七档判定 `OK/LOCAL/TEMPLATE/BARE/PRIVATE_OK/NONRELEASE/MISSING`；**release 文件只引用 release 文件，非 release 文件可引用全部**；反引号路径按仓库根起算、真链接（label 在 `[]`、target 在 `()`）按本文件相对，两套体系分开判 | `--root`、`--json`、`--kind`、`--fail-on`、`--ignore`、`--out` |
+| `scan_hygiene.py` | **文件卫生**：CRLF／乱码／临时垃圾／空文件／缺尾换行／超行数预算；`--fix` 就地改回 LF | `--root`、`--fix`、`--max-lines`、`--allow`、`--json`、`--fail-on`、`--out` |
+| `init_subproject.py` | **子项目脚手架**：生成目录骨架、Issue/PR 模板、CODEOWNERS、裁决台账、报告索引、分层记忆入口 | `--name`、`--root`、`--scripts`、`--owner`、`--force`、`--dry-run` |
+
+### 落盘守则（Windows 必读）
+
+`io.open(p, 'w', encoding='utf-8')` 在 Windows 上 `newline` 默认为 `None`：
+**读时把 CRLF 归一成 LF，写时又把 LF 转回 CRLF**。任何被 Python 文本模式改过一小段的 md，
+整份都会变成 CRLF，`.gitattributes` 拦不住脚本落盘那一笔。
+
+> **凡写文本，一律 `io.open(p, 'w', encoding='utf-8', newline='\n')`。**
+
+自检：`python scripts/scan_hygiene.py --root . --fail-on crlf,junk,mojibake`。
+
+# 引用体检（release 文件不得引用不存在或非 release 的文件）
+python "../GitHub Novel Serialization Skill/scripts/check_refs.py" --root . \
+    --ignore '^state/|^worldbuilding/|^characters/|^notes-personal/|^issues/'
+
+# 文件卫生（CRLF／乱码／垃圾文件／行数预算）
+python "../GitHub Novel Serialization Skill/scripts/scan_hygiene.py" --root . \
+    --max-lines 500 --allow "CHANGELOG.md,progress.md" --fail-on crlf,junk,mojibake
+
+# 新建子项目骨架
+python "../GitHub Novel Serialization Skill/scripts/init_subproject.py" --name "书名" --root ../新书
+```
 
 ### 审稿脚本设计约定
 

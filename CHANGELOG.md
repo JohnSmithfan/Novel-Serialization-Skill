@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.0] - 2026-10-07
+
 ### Added
 - `.gitignore` and `.editorconfig` (were missing from the generated project)
 - `LICENSES/CC-BY-NC-SA-4.0.txt` with the official Creative Commons license text
@@ -47,8 +49,53 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   density), plus the shared `_review_lib.py`. All accept `--root`, `--chapters`, `--draft`, `--out`
   and work with both `ch-001-title.md` and `第NNN章 标题.md` naming; thresholds were calibrated
   against real manuscript text to keep false positives low
+- `scripts/check_refs.py`: reference integrity check with seven buckets
+  (`OK` / `LOCAL` / `TEMPLATE` / `BARE` / `PRIVATE_OK` / `NONRELEASE` / `MISSING`).
+  **Release files reference release files only; non-release files may reference anything** —
+  a private target referenced from a release file is `NONRELEASE` (defect), the same target
+  referenced from a report or working note is `PRIVATE_OK` (allowed). Backtick paths
+  resolve from the repository root, real links (a label in `[]` followed by a
+  target in `()`) resolve relative to the file —
+  the two systems are deliberately kept apart. URL-encoded links (`%20`) and root-absolute
+  links (leading `/`) are resolved the way GitHub resolves them. Supports `--root`, `--kind`,
+  `--ignore`, `--fail-on`, `--json`, `--out`
+- `scripts/scan_hygiene.py`: file hygiene scan — CRLF, mojibake, junk files, empty files,
+  missing trailing newline, line budget. `--fix` rewrites CRLF files as LF in place;
+  `--allow` declares line-budget exemptions; `--fail-on` selects the blocking checks
+- `scripts/init_subproject.py`: subproject scaffold generator — directory skeleton,
+  issue forms (chapter claim / errata / creative proposal / hygiene), PR template,
+  CODEOWNERS, decision ledger, report index, layered-memory entrance. `--dry-run` and
+  `--force` supported; existing files are never overwritten by default
+- `references/subproject-playbook.md`: field-tested subproject conventions distilled from
+  the `-1928` subproject (288 released chapters, 227 reports, 558+ ledger rulings) —
+  directory layout, what replaced `state/`, decision ledger, three-index report rule,
+  layered memory, LF write discipline, reference integrity, honest 500-line policy
+- Gap analysis of this repository against real subproject use — 19 defects graded
+  P0/P1/P2 across three classes (spec vs. practice, script capability, community
+  engineering). The report itself is a working artefact and is not committed
+- GitHub community engineering files: `.github/CODEOWNERS`, `SUPPORT.md`,
+  `GOVERNANCE.md`, `CITATION.cff`, `.github/labels.yml`, `.github/release.yml`,
+  `.github/workflows/ci.yml`, `.github/workflows/label-sync.yml`,
+  `.github/workflows/stale.yml`, `.github/ISSUE_TEMPLATE/errata.yml`,
+  `.github/ISSUE_TEMPLATE/docs.yml`, `.github/PULL_REQUEST_TEMPLATE/content.md`,
+  `.markdownlint.json`, `.pre-commit-config.yaml`
 
 ### Changed
+- `SKILL.md`: chapter naming is now explicitly dual-track — `ch-{number}-{title}.md` is the
+  default, subprojects may register their own convention; volume/arc directories recognised;
+  `state/` may be replaced by the playbook layout provided one home per state kind is chosen;
+  500-line rule now has declared exemptions
+- `CONTRIBUTING.md`: 500-line rule gained an explicit exemption table (ledger / log,
+  reference table, generated seed) — exemptions must be declared via `scan_hygiene.py --allow`
+- `scripts/README.md`: three new scripts catalogued, plus the Windows LF write discipline
+  and ready-to-paste invocation examples
+- **Reports are no longer committed.** Working reports live in `.workbuddy/reports/`
+  and are excluded by `.gitignore`. Release files (`SKILL.md`, `README.md`, `CONTRIBUTING.md`,
+  `SUBPROJECTS.md`, `SUPPORT.md`, `CHANGELOG.md`) do not reference them, which is what the
+  release-only-references-release rule requires
+- `references/glossary.md`: root-absolute example paths (`/CODE_OF_CONDUCT.md`) no longer
+  carry a leading slash, so they resolve from the repository root
+- `references/method-patterns-publishing.md`: `CHANGELOG.md` link corrected to `../CHANGELOG.md`
 - `modules/` restructured to `modules/<name>/SKILL.md` per spec Sections 1 and 5.2
 - `references/examples/` created and the three worked examples moved into it
 - `.github/ISSUE TEMPLATE` renamed to `.github/ISSUE_TEMPLATE` so GitHub detects the forms
@@ -80,6 +127,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `CONTRIBUTING.md`: dual-mode wording corrected so it no longer contradicts itself
 
 ### Fixed
+- `scripts/humanizer_check.py` and `scripts/review_rationality.py` were stored with CRLF
+  line endings, contradicting `.gitattributes` and `.editorconfig`. Both normalised to LF.
+  Root cause documented in `scripts/README.md`: `io.open(p, 'w', encoding='utf-8')` defaults
+  to `newline=None`, which converts LF back to CRLF on write — always pass `newline='\n'`
+- All `[OWNER]` / `[REPO]` / `[YOUR_GITHUB_USERNAME]` placeholders replaced with the real
+  owner, so clone and install commands are directly executable
+- `README.md` directory structure no longer lists `README_FOR_AI_Audit_Report*.md`; those
+  reports are generated on demand and excluded by `.gitignore`
+- `SUBPROJECTS.md`: `-1928` status updated (288 chapters released, not 55)
 - Broken internal links in `references/method-patterns.md` (raw space + wrong anchor)
   and `prompts/01-implement-method.md` (pointed at the wrong README)
 - Three module SKILL.md files referencing example files that do not exist in the spec tree
@@ -158,8 +214,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-[Unreleased]: https://github.com/[OWNER]/[REPO]/compare/v1.1.2...HEAD
-[1.1.2]: https://github.com/[OWNER]/[REPO]/compare/v1.1.1...v1.1.2
-[1.1.1]: https://github.com/[OWNER]/[REPO]/compare/v1.1.0...v1.1.1
-[1.1.0]: https://github.com/[OWNER]/[REPO]/compare/v1.0.0...v1.1.0
-[1.0.0]: https://github.com/[OWNER]/[REPO]/releases/tag/v1.0.0
+[Unreleased]: https://github.com/JohnSmithfan/github-novel-serialization-skill/compare/v1.2.0...HEAD
+[1.2.0]: https://github.com/JohnSmithfan/github-novel-serialization-skill/compare/v1.1.2...v1.2.0
+[1.1.2]: https://github.com/JohnSmithfan/github-novel-serialization-skill/compare/v1.1.1...v1.1.2
+[1.1.1]: https://github.com/JohnSmithfan/github-novel-serialization-skill/compare/v1.1.0...v1.1.1
+[1.1.0]: https://github.com/JohnSmithfan/github-novel-serialization-skill/compare/v1.0.0...v1.1.0
+[1.0.0]: https://github.com/JohnSmithfan/github-novel-serialization-skill/releases/tag/v1.0.0

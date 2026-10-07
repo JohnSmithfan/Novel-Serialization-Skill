@@ -15,7 +15,7 @@
 用法（在子项目根目录执行）：
     python "../GitHub Novel Serialization Skill/scripts/review_punctuation.py"
     python "../GitHub Novel Serialization Skill/scripts/review_punctuation.py" --chapters 031 034
-    python "../GitHub Novel Serialization Skill/scripts/review_punctuation.py" --draft notes-personal/第一卷正文草稿.md
+    python "../GitHub Novel Serialization Skill/scripts/review_punctuation.py" --draft notes-personal/正文草稿.md
 
 判定：FAIL —— 确定性错误（引号错位）；WARN —— 需人工复核。
 """

@@ -23,7 +23,7 @@ sys.stdout.reconfigure(encoding='utf-8')
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 HUMANIZER = os.path.join(SCRIPT_DIR, 'humanizer_check.py')
 
-DRAFT_DEFAULT = 'notes-personal/第一卷正文草稿.md'
+DRAFT_DEFAULT = 'notes-personal/正文草稿.md'
 
 
 def cn(t):

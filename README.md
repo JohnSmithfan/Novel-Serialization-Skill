@@ -4,7 +4,7 @@
 
 [![License: GPL-3.0](https://img.shields.io/badge/License-GPL--3.0-blue.svg)](LICENSE)
 [![License: CC BY-NC-SA 4.0](https://img.shields.io/badge/License--Novel%20Content-CC%20BY--NC--SA%204.0-lightgrey.svg)](LICENSES/CC-BY-NC-SA-4.0.txt)
-[![Skill Version](https://img.shields.io/badge/Skill%20Version-1.1.2-orange)](SKILL.md)
+[![Skill Version](https://img.shields.io/badge/Skill%20Version-1.2.0-orange)](SKILL.md)
 [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](CODE_OF_CONDUCT.md)
 
 ---
@@ -61,7 +61,7 @@ Every module is independently usable, composable, and under 500 lines — design
 ### Step 1 — Clone the Skill
 
 ```
-git clone https://github.com/[OWNER]/github-novel-serialization-skill.git
+git clone https://github.com/JohnSmithfan/github-novel-serialization-skill.git
 cd github-novel-serialization-skill
 ```
 
@@ -108,21 +108,20 @@ github-novel-serialization-skill/
 |
 +-- README.md                           # This file
 +-- README FOR AI.md                    # Meta-instructions for AI generation (seed file)
-+-- README_FOR_AI_Audit_Report.md       # Post-generation compliance audit report (Round 1)
-+-- README_FOR_AI_Audit_Report_Round2.md # Content-level re-audit report (Round 2)
-+-- README_FOR_AI_Audit_Report_Round3.md # Cross-document consistency audit (Round 3)
-+-- .gitattributes                      # Line-ending policy (LF everywhere)
 +-- SKILL.md                            # Index + quick-reference
-+-- .gitignore                          # Git ignore rules
-+-- .editorconfig                       # Editor configuration
++-- CHANGELOG.md                        # Version history
++-- SUBPROJECTS.md                      # Registered independent novel subprojects
++-- CONTRIBUTING.md                     # Contribution guidelines
++-- CODE_OF_CONDUCT.md                  # Community standards
++-- SECURITY.md                         # Security policy
++-- SUPPORT.md                          # Where to go with which question
++-- GOVERNANCE.md                       # Roles, decision process, release policy
++-- CITATION.cff                        # Machine-readable citation metadata
 +-- LICENSE                             # GPL-3.0
 +-- LICENSES/                           # Additional licenses
 |   +-- CC-BY-NC-SA-4.0.txt
-+-- CODE_OF_CONDUCT.md                  # Community standards
-+-- CONTRIBUTING.md                     # Contribution guidelines
-+-- SECURITY.md                         # Security policy
-+-- CHANGELOG.md                        # Version history
-+-- SUBPROJECTS.md                      # Registered independent novel subprojects
++-- .editorconfig / .gitattributes / .gitignore
++-- .markdownlint.json / .pre-commit-config.yaml
 |
 +-- scripts/                            # Shared automation scripts (consumed by subprojects)
 |   +-- README.md                       # Script catalog & invocation conventions
@@ -136,6 +135,9 @@ github-novel-serialization-skill/
 |   +-- review_rationality.py           # Rationality review (logic, pacing, outline cover)
 |   +-- review_punctuation.py           # Punctuation & orthography review
 |   +-- _review_lib.py                  # Shared library for the review scripts
+|   +-- check_refs.py                   # Reference integrity (six buckets)
+|   +-- scan_hygiene.py                 # CRLF / mojibake / junk / line-budget scan
+|   +-- init_subproject.py              # Subproject scaffold generator
 |
 +-- references/                         # Deep documentation & templates
 |   +-- method-patterns.md              # Master template file
@@ -144,6 +146,7 @@ github-novel-serialization-skill/
 |   +-- method-patterns-chapter.md
 |   +-- method-patterns-continuity.md
 |   +-- method-patterns-publishing.md
+|   +-- subproject-playbook.md          # Field-tested subproject conventions
 |   +-- glossary.md
 |   +-- examples/                       # Worked examples
 |   |   +-- example-worldbuilding.md
@@ -156,30 +159,36 @@ github-novel-serialization-skill/
 |   +-- 02-robustness-checks.md
 |
 +-- modules/                            # Functional sub-skills
-|   +-- worldbuilding/
-|   |   +-- SKILL.md
-|   +-- character-design/
-|   |   +-- SKILL.md
-|   +-- chapter-writing/
-|   |   +-- SKILL.md
-|   +-- continuity-check/
-|   |   +-- SKILL.md
-|   +-- publishing-workflow/
-|   |   +-- SKILL.md
-|   +-- continuity-tracker/
-|       +-- SKILL.md
+|   +-- worldbuilding/SKILL.md
+|   +-- character-design/SKILL.md
+|   +-- chapter-writing/SKILL.md
+|   +-- continuity-check/SKILL.md
+|   +-- publishing-workflow/SKILL.md
+|   +-- continuity-tracker/SKILL.md
 |
 +-- .github/                            # GitHub community health files
+    +-- CODEOWNERS
     +-- ISSUE_TEMPLATE/
     |   +-- bug-report.yml
     |   +-- feature-request.yml
+    |   +-- errata.yml
+    |   +-- docs.yml
     |   +-- config.yml
     +-- PULL_REQUEST_TEMPLATE.md
+    +-- PULL_REQUEST_TEMPLATE/content.md
     +-- FUNDING.yml
     +-- dependabot.yml
+    +-- labels.yml
+    +-- release.yml
     +-- workflows/
+        +-- ci.yml
         +-- novel-release.yml
+        +-- label-sync.yml
+        +-- stale.yml
 ```
+
+> **Note:** generation-compliance audit reports (`README_FOR_AI_Audit_Report*.md`) are produced on
+> demand and are **not** committed — `.gitignore` excludes them. Do not expect them in the tree.
 
 ---
 
@@ -203,11 +212,12 @@ commits and releases on its own, and only borrows shared capability (scripts) fr
 
 | Subproject | Location | Remote | Scripts |
 |------------|----------|--------|---------|
-| **-1928** (《奉天1928》, Republican-era Northeast alternate history) | `C:\Users\Admin\-1928` | `https://github.com/JohnSmithfan/-1928.git` | `scripts/humanizer_check.py`, `_list_hits.py`, `_promote_draft.py`, `_sync_draft.py`, `review_all.py`, `review_scale.py`, `review_continuity.py`, `review_rationality.py`, `review_punctuation.py` |
+| **-1928** (《奉天1928》, Republican-era Northeast alternate history) | `C:\Users\Admin\-1928` | `https://github.com/JohnSmithfan/-1928.git` | In progress: 5 volumes / 1008 chapters planned; **288 chapters released** (Vol.1 1–88, Vol.2 89–288) as of 2026-10-07 | `scripts/` — all of the above, invoked from the subproject root |
 
 Rules: scripts stay in this repo's `scripts/` (never copied into a subproject as `tools/`), and are
 invoked from the subproject root — the subproject root is the script's working directory.
-See [SUBPROJECTS.md](SUBPROJECTS.md) and [scripts/README.md](scripts/README.md).
+See [SUBPROJECTS.md](SUBPROJECTS.md), [scripts/README.md](scripts/README.md) and the
+[Subproject Playbook](references/subproject-playbook.md).
 
 ---
 
@@ -220,14 +230,14 @@ Add the Skill to your GitHub repository's skills directory:
 ```
 # Clone the repository into your project's .github/skills directory
 mkdir -p .github/skills
-git clone https://github.com/[OWNER]/github-novel-serialization-skill.git .github/skills/github-novel-serialization-skill
+git clone https://github.com/JohnSmithfan/github-novel-serialization-skill.git .github/skills/github-novel-serialization-skill
 ```
 
 ### For Claude Code
 
 ```
 # Clone the repository
-git clone https://github.com/[OWNER]/github-novel-serialization-skill.git
+git clone https://github.com/JohnSmithfan/github-novel-serialization-skill.git
 cd github-novel-serialization-skill
 
 # Create a symlink in your Claude Code skills directory
@@ -239,7 +249,7 @@ ln -s $(pwd) ~/.claude/skills/github-novel-serialization-skill
 
 ```
 # Clone the repository
-git clone https://github.com/[OWNER]/github-novel-serialization-skill.git
+git clone https://github.com/JohnSmithfan/github-novel-serialization-skill.git
 cd github-novel-serialization-skill
 
 # Copy the repository into your agent's skills directory
@@ -306,9 +316,12 @@ git push origin v1.0.0
 
 Contributions are welcome! Please read our [Contributing Guide](CONTRIBUTING.md) and [Code of Conduct](CODE_OF_CONDUCT.md) before submitting pull requests.
 
-- **Bug Reports**: [Open an Issue](https://github.com/[OWNER]/github-novel-serialization-skill/issues/new?template=bug-report.yml)
-- **Feature Requests**: [Open a Feature Request](https://github.com/[OWNER]/github-novel-serialization-skill/issues/new?template=feature-request.yml)
+- **Bug Reports**: [Open an Issue](https://github.com/JohnSmithfan/github-novel-serialization-skill/issues/new?template=bug-report.yml)
+- **Feature Requests**: [Open a Feature Request](https://github.com/JohnSmithfan/github-novel-serialization-skill/issues/new?template=feature-request.yml)
+- **Docs & Errata**: [Open a Docs Issue](https://github.com/JohnSmithfan/github-novel-serialization-skill/issues/new?template=docs.yml)
 - **Security Issues**: [View Security Policy](SECURITY.md)
+- **Not sure where to go**: [SUPPORT.md](SUPPORT.md)
+- **How decisions are made**: [GOVERNANCE.md](GOVERNANCE.md)
 - **Pull Requests**: Follow our branch naming and commit format conventions
 
 ---

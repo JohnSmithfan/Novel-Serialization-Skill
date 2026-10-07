@@ -15,7 +15,7 @@ license_note: >
 compatibility: Works with any LLM-backed coding agent (Claude Code, GitHub Copilot, Cursor, etc.)
 metadata:
   author: community
-  version: 1.1.2
+  version: 1.2.0
   output_language_default: English
 ---
 
@@ -72,6 +72,7 @@ Publish       →  Git tag + GitHub Release (modules/publishing-workflow/)
 ## Quick Reference: File Conventions
 
 - **Chapter files**: `chapters/ch-{number}-{title}.md`, zero-padded to 3 digits (e.g., `ch-001-the-beginning.md`) so that lexical sort equals numeric sort
+  - **Subprojects may adopt their own convention** (e.g. `chapters/{卷}/{幕}/第NNN章 四字标题.md`) provided it is written down in the subproject `CONTRIBUTING.md`, recognised by the shared scripts (both forms are supported), and keeps lexical sort equal to numeric sort. See `references/subproject-playbook.md` Section 2.
 - **World-building docs**: `worldbuilding/{domain}.md` (e.g., `worldbuilding/magic-system.md`)
 - **Character sheets**: `characters/{name}.md`
 - **State files**: `state/{type}.md` (timeline, character-states, thread-ledger, location-states)
@@ -101,6 +102,11 @@ Maintain the following state files in `state/` directory:
 The continuity tracker **owns** every state file above (spec Section 5.2); other modules propose
 updates rather than writing state directly, preserving role isolation (spec Section 6).
 
+> **In production**, long-running subprojects routinely replace `state/` with the layout in
+> `references/subproject-playbook.md` Section 3 (timeline inside `worldbuilding/`, character state
+> inside the dossier, threads inside `issues/` + a decision ledger). Pick **one** home per kind of
+> state and write it down; splitting the same fact across two places is worse than either choice.
+
 ## Verification Gates
 
 Before publishing any chapter, ALL of the following gates must pass:
@@ -119,18 +125,19 @@ Before publishing any chapter, ALL of the following gates must pass:
 ## Cross-References
 
 - **Templates & Methodology**: `references/method-patterns.md` (master) and its split modules (worldbuilding, character, chapter, continuity, publishing)
+- **Subproject Playbook**: `references/subproject-playbook.md` — field-tested layout, decision ledger, report indexing, layered memory, hygiene. **Where it disagrees with this file, it wins for subprojects in production.**
 - **Glossary**: `references/glossary.md` — domain terminology and conventions
 - **Worked Examples**: `references/examples/` — example-worldbuilding.md, example-character-sheet.md, example-chapter-draft.md
 - **Implementation Prompt**: `prompts/01-implement-method.md` — full novel generation prompt template
 - **Robustness Checks**: `prompts/02-robustness-checks.md` — multi-dimensional quality check prompt
 - **Prompt Usage Guide**: `prompts/README.md` — how to use dual-mode prompt templates
-- **Shared Scripts**: `scripts/README.md` — catalog and invocation conventions for `humanizer_check.py` (de-AI-tone gate), `_list_hits.py`, `_promote_draft.py` (draft→release sync), `_sync_draft.py` (errata write-back), and the **review gate family**: `review_all.py` (all-in-one review report), `review_scale.py` (word-count), `review_continuity.py` (cross-chapter consistency), `review_rationality.py` (plot logic), `review_punctuation.py` (punctuation & orthography), backed by `_review_lib.py`. Scripts live in this repo only; invoke them from the subproject root.
+- **Shared Scripts**: `scripts/README.md` — catalog and invocation conventions for `humanizer_check.py` (de-AI-tone gate), `_list_hits.py`, `_promote_draft.py` (draft→release sync), `_sync_draft.py` (errata write-back), `check_refs.py` (reference integrity, six buckets), `scan_hygiene.py` (CRLF / mojibake / junk / line budget), `init_subproject.py` (subproject scaffold), and the **review gate family**: `review_all.py` (all-in-one review report), `review_scale.py` (word-count), `review_continuity.py` (cross-chapter consistency), `review_rationality.py` (plot logic), `review_punctuation.py` (punctuation & orthography), backed by `_review_lib.py`. Scripts live in this repo only; invoke them from the subproject root. **Always write text with `newline='\n'`** — see `scripts/README.md`.
 - **Subprojects**: `SUBPROJECTS.md` — registered independent novel subprojects (own git repo and remote), their locations and which scripts they consume.
 
 ## Constraints & Boundaries
 
 1. **SKILL.md is index + quick-reference ONLY** — no code templates, no long-form methodology. All templates live in `references/`.
-2. **No file exceeds 500 lines** — split into sub-modules when approaching the limit (see `references/method-patterns.md` split protocol).
+2. **No file exceeds 500 lines** — split into sub-modules when approaching the limit (see `references/method-patterns.md` split protocol). Ledgers, logs and generated seed files are exempt **but must be declared** via `scan_hygiene.py --allow`. See `references/subproject-playbook.md` Section 10.
 3. **`prompts/` folder is DUAL-MODE** — files are standalone copy-paste templates for humans, NOT for agent auto-invocation.
 4. **Harness Engineering compliance** — constraint-before-generation, structured memory, verification gates, modular decomposition, and feedback loops are mandatory.
 5. **Every module is independently usable** — no circular dependencies between modules; each has a single responsibility.

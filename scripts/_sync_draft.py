@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-"""把 chapters/ 中指定章节正文同步回 notes-personal/第一卷正文草稿.md"""
+"""把 chapters/ 中指定章节正文同步回 notes-personal/正文草稿.md"""
 import re, sys, glob, os
 sys.stdout.reconfigure(encoding='utf-8')
 
-DRAFT = 'notes-personal/第一卷正文草稿.md'
+DRAFT = 'notes-personal/正文草稿.md'
 NUMS = sys.argv[1:] or ['042', '028', '030', '033', '037']
 
 src = {}

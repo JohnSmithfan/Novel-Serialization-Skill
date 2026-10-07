@@ -17,7 +17,7 @@
 
 | 子项目 | 位置 | 远端 | 状态 | 使用脚本 |
 |---|---|---|---|---|
-| **《奉天1928》** `-1928` | `C:\Users\Admin\-1928` | `https://github.com/JohnSmithfan/-1928.git` | 进行中：第一卷 55 章，正文约 22.3 万字 | `humanizer_check.py`、`_list_hits.py`、`_promote_draft.py`、`_sync_draft.py`、`review_all.py`、`review_scale.py`、`review_continuity.py`、`review_rationality.py`、`review_punctuation.py` |
+| **《奉天1928》** `-1928` | `C:\Users\Admin\-1928` | `https://github.com/JohnSmithfan/-1928.git` | 进行中：规划 5 卷 1008 章；截至 2026-10-07 已定稿 **288 章**（第一卷 1—88、第二卷 89—288） | 全部 `scripts/`（含新增 `check_refs.py`、`scan_hygiene.py`、`init_subproject.py`） |
 
 ### 《奉天1928》（`-1928`）
 
@@ -30,8 +30,12 @@
 - **脚本迁移记录（2026-09-27）**：原 `-1928/tools/` 4 个脚本迁入本仓库 `scripts/`，子项目 `tools/` 目录删除；`_promote_draft.py` 改为以当前工作目录为项目根（新增 `--root`），humanizer 按脚本自身目录定位。
 - **审稿脚本（2026-09-27 新增）**：`review_all.py`（综合，一次跑完全部门禁）+ 四个单维度脚本（规模／一致性／合理化／标点），共用 `_review_lib.py`；命名兼容通用 `ch-001-title.md` 与本子项目 `第NNN章 标题.md`，支持 `--draft` 直审草稿。送审前跑 `review_all.py`，FAIL 未清零不得 promote。
 
+- **工程经验回流（2026-10-07）**：本子项目自建过 827 个脚本、227 份报告、27 份分层记忆档与一套裁决台账（编号至 D558）。这些能力已按优先级回抽进本仓库：引用体检 `check_refs.py`、文件卫生 `scan_hygiene.py`、子项目脚手架 `init_subproject.py`，约定部分写入 [`references/subproject-playbook.md`](references/subproject-playbook.md)。
+- **上架前自检**：`scan_hygiene.py --fail-on crlf,junk,mojibake`、`check_refs.py --kind MISSING --kind NONRELEASE`、送审前 `review_all.py`。
+
 ## 新增子项目
 
+0. `python scripts/init_subproject.py --name "<书名>" --root <路径>`（生成骨架与社区文件）；
 1. 建独立 git 仓库并配置远端；
 2. 在上表追加一行（位置／远端／状态／使用脚本）；
 3. 在子项目 `CONTRIBUTING.md` 写明脚本调用方式（相对本仓库 `scripts/` 的路径）；

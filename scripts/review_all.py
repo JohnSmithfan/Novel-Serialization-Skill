@@ -12,7 +12,7 @@
 用法（在子项目根目录执行）：
     python "../GitHub Novel Serialization Skill/scripts/review_all.py"
     python "../GitHub Novel Serialization Skill/scripts/review_all.py" --chapters 031 034 036
-    python "../GitHub Novel Serialization Skill/scripts/review_all.py" --draft notes-personal/第一卷正文草稿.md --batch "第9批"
+    python "../GitHub Novel Serialization Skill/scripts/review_all.py" --draft notes-personal/正文草稿.md --batch "第9批"
     python "../GitHub Novel Serialization Skill/scripts/review_all.py" --out .workbuddy/reports/草稿审核报告_2026-09-27.md
     python "../GitHub Novel Serialization Skill/scripts/review_all.py" --skip humanizer,scale
 

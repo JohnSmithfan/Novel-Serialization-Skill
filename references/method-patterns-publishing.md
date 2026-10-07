@@ -55,7 +55,7 @@ Changelog: See CHANGELOG.md
 [Any notes for readers upgrading from previous version]
 
 ## Full Changelog
-See [CHANGELOG.md](CHANGELOG.md) for complete history.
+See [CHANGELOG.md](../CHANGELOG.md) for complete history.
 ```
 
 ---

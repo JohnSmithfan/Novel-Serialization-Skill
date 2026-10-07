@@ -10,7 +10,7 @@ license_note: >
 compatibility: Works with any LLM-backed coding agent (Claude Code, GitHub Copilot, Cursor, etc.)
 metadata:
   author: community
-  version: 1.1.2
+  version: 1.2.0
   output_language_default: English
 ---
 

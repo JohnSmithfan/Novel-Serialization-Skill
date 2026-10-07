@@ -5,7 +5,7 @@
 用法（脚本存于技能仓库 scripts/，在子项目根目录执行）：
     python "../GitHub Novel Serialization Skill/scripts/review_scale.py"
     python "../GitHub Novel Serialization Skill/scripts/review_scale.py" --target 4000 --chapters 031 034
-    python "../GitHub Novel Serialization Skill/scripts/review_scale.py" --draft notes-personal/第一卷正文草稿.md
+    python "../GitHub Novel Serialization Skill/scripts/review_scale.py" --draft notes-personal/正文草稿.md
     python "../GitHub Novel Serialization Skill/scripts/review_scale.py" --out .workbuddy/reports/规模审查_2026-09-27.md
 
 判定：

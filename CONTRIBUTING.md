@@ -198,6 +198,21 @@ When splitting:
 3. Each sub-module must be independently usable
 4. Update the parent index file to reflect the new structure
 
+#### Exemptions (must be declared, never assumed)
+
+The budget exists to keep a file readable in review. It was written for prose and
+method documents. Three kinds of file legitimately exceed it:
+
+| Kind | Examples | Treatment |
+|------|----------|-----------|
+| Ledger / log | `CHANGELOG.md`, `progress.md`, decision ledger | Exempt — chronological append, never read end-to-end |
+| Reference table | setting compendia | Split by domain first; if one domain is genuinely thousands of lines, split by section and link |
+| Generated / seed | `README FOR AI.md` | Exempt, but never hand-edited |
+
+Declare an exemption with `scan_hygiene.py --allow <file>` so it is visible in
+CI rather than accumulating silently. A rule with unstated exceptions is a rule
+nobody follows. See `references/subproject-playbook.md` Section 10.
+
 ### Module SKILL.md Structure
 
 Each module under `modules/` must have its own `SKILL.md` with:
