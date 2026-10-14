@@ -129,7 +129,7 @@ github-novel-serialization-skill/
 |   +-- _list_hits.py                   # List flagged sentences for manual rewrite
 |   +-- _promote_draft.py               # Draft -> release sync (snapshot, gates)
 |   +-- _sync_draft.py                  # Release -> draft write-back (errata only)
-|   +-- review_all.py                   # All-in-one review: every gate, one report
+|   +-- review_all.py                   # Review: every gate; --stage for the 3-stage review
 |   +-- review_scale.py                 # Scale review (word-count targets & gaps)
 |   +-- review_continuity.py            # Consistency review (names, timeline, titles)
 |   +-- review_rationality.py           # Rationality review (logic, pacing, outline cover)

@@ -7,6 +7,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- **Three-stage review (三审制度)** for chapter promotion: 初审 (责任编辑, mechanical &
+  textual layer) → 复审 (编辑部主任, content layer) → 终审 (主编, full-dimension regression
+  + read-through sign-off). One-way flow; a later stage may overturn an earlier verdict with
+  a written reason, never the reverse; any `FAIL` blocks `_promote_draft.py` until 终审 signs off.
+- `scripts/review_all.py`: new `--stage first|second|final` runs only that stage's dimensions,
+  titles the report per stage, prints the next-step flow hint, and emits a per-stage signature
+  block. Running without `--stage` keeps the legacy all-in-one behaviour (unchanged).
+- `scripts/_review_lib.py`: `STAGES` / `STAGE_DIMS` / `STAGE_KEYS` (single source of truth for
+  the stage→dimension mapping, roles and exit gates), plus `stage_label()`, `stage_dims()`,
+  `stage_intro()`, `signoff()`; `render()` gained a `stage=` argument that selects the matching
+  signature block.
+- `references/method-patterns-publishing.md` §7 "Three-Stage Review": roles, dimensions,
+  commands, per-stage verdict semantics, flow rules, and where the definitions live.
+
+### Changed
+- `SKILL.md` `## Verification Gates`: the flat "Review gate" checklist item became a three-stage
+  quick-reference table (stage → role → dimensions → exit gate) plus the checklist; long-form
+  rules and commands moved to `references/method-patterns-publishing.md` §7 per the
+  "SKILL.md is index + quick-reference only" rule.
+- `scripts/README.md` and `SUBPROJECTS.md`: gate wording updated to the three-stage flow
+  (per-stage invocation, per-stage archived reports, promotion gated on 终审 sign-off).
+
+### Fixed
+- `scripts/_review_lib.py` `emit()`: report write-back now uses `newline='\n'`, matching the
+  project's Windows write rule (scripts/README.md "落盘守则"); previously a stage report could
+  be written with CRLF and fail `scan_hygiene.py --fail-on crlf`.
+
 ## [1.2.0] - 2026-10-07
 
 ### Added

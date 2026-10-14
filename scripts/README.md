@@ -34,6 +34,11 @@ python "../GitHub Novel Serialization Skill/scripts/_sync_draft.py" 041
 python "../GitHub Novel Serialization Skill/scripts/review_all.py" --batch "第9批" \
     --out .workbuddy/reports/草稿审核报告_2026-09-27.md
 
+# 审稿：三审制度分阶段（初审／复审／终审各出报告、各带独立签字栏）
+python "../GitHub Novel Serialization Skill/scripts/review_all.py" --stage first  --out .workbuddy/reports/初审_第9批.md
+python "../GitHub Novel Serialization Skill/scripts/review_all.py" --stage second --out .workbuddy/reports/复审_第9批.md
+python "../GitHub Novel Serialization Skill/scripts/review_all.py" --stage final  --out .workbuddy/reports/终审签发_第9批.md
+
 # 单维度审稿
 python "../GitHub Novel Serialization Skill/scripts/review_scale.py" --target 4000
 python "../GitHub Novel Serialization Skill/scripts/review_continuity.py"
@@ -52,7 +57,7 @@ python "../GitHub Novel Serialization Skill/scripts/review_punctuation.py"
 | `_list_hits.py` | 列出待改写的命中句（人工改写前取句） | `--kind banned/pattern/vague/emotion/idiom/dash`、`--target <路径>`、`--limit N` |
 | `_promote_draft.py` | 草稿 → 定稿（release）同步：按章号整块写入、写前快照 `_trash/定稿同步前_<日期>/`、字数前后对比、章标题零差异校验、humanizer 门禁（FAIL 拒绝同步） | `<章号...>`、`--root`、`--draft`、`--dry-run`、`--report`、`--no-check`、`--force` |
 | `_sync_draft.py` | 定稿 → 草稿回写（**仅勘误**，不得作常规改动通道） | `<章号...>` |
-| `review_all.py` | **综合审稿**：一次跑完全部门禁并输出审核报告（对象／结论表／问题明细／规模概览／待办清单／签字栏） | `--batch`、`--chapters`、`--draft`、`--target`、`--skip`、`--out` |
+| `review_all.py` | **综合审稿**：跑门禁并输出审核报告（对象／结论表／问题明细／规模概览／待办清单／签字栏）；`--stage` 按三审制度分阶段（`first` 初审＝humanizer+scale+punctuation／`second` 复审＝continuity+rationality／`final` 终审＝全维回归+签发），各审次出独立签字栏；不带 `--stage` 为一次跑全部（旧行为） | `--batch`、`--stage`、`--chapters`、`--draft`、`--target`、`--skip`、`--out` |
 | `review_scale.py` | **规模审查**：每章字数、达标率、缺口、分布区间与缺口 TOP（供分批扩写排序） | `--target`、`--max`、`--chapters`、`--draft`、`--out` |
 | `review_continuity.py` | **一致性审稿**：专名异写、角色年龄与档案冲突、时间线倒流、标题与正文不符、timeline 登记缺失、草稿与定稿章标题零差异 | `--min-freq`、`--min-variant`、`--max-variant`、`--min-ent-len`、`--year-tol`、`--out` |
 | `review_rationality.py` | **合理化审查**：重复段落（章内／跨章）、超长段与残句、对话占比、序数跳号、视角混用、伏笔未回收、大纲要点偏离 | `--outline`、`--max-para`、`--max-dialogue`、`--min-cover`、`--out` |
@@ -90,12 +95,13 @@ python "../GitHub Novel Serialization Skill/scripts/init_subproject.py" --name "
 2. **通用参数**：`--root`（项目根，默认当前工作目录）、`--chapters`（指定章号）、`--draft`（审草稿而非定稿）、`--out`（Markdown 报告落盘）。
 3. **判定分级**：`FAIL` 必须修改且不得进定稿；`WARN` 需人工复核（综合结论记 `REVISE`）；`PASS` 达标。
 4. **宁可漏报，不可误报**：各检查项均按真实语料校准过阈值（如繁体按词组而非单字扫描、异写只查等长实词差异、年份孤例不判倒流），避免噪声淹没真问题。
-5. **只挑可疑处**，最终以主编人工复核为准；报告自带签字栏。
+5. **只挑可疑处**，最终以人工复核为准；报告自带签字栏。三审制度下签字栏按审次生成（初审＝责任编辑／复审＝编辑部主任／终审＝主编签发）。
+6. **三审维度归属**：初审（`first`）管机械与文字层 `humanizer`/`scale`/`punctuation`；复审（`second`）管内容层 `continuity`/`rationality`；终审（`final`）全维回归 + 通读签发。审次单向流转，后审可推翻前审（须写明理由），前审不得推翻后审；任一 `FAIL` 阻断 promote。详见 `SKILL.md` Verification Gates 与 `references/method-patterns-publishing.md` §7。
 
 ## 门禁约定
 
 - 改动一律**先进子项目草稿**（`notes-personal/`），草稿 `humanizer_check.py` 通过且审核通过后，才允许用 `_promote_draft.py` 同步进 `chapters/` 定稿。
-- 送审前建议跑 `review_all.py`（含 humanizer 与规模／一致性／合理化／标点四审），把生成的审核报告归档到 `.workbuddy/reports/`；**FAIL 项未清零不得 promote**。
+- 送审走**三审制度**：`review_all.py --stage first`（初审·责任编辑）→ `--stage second`（复审·编辑部主任）→ `--stage final`（终审·主编签发），每审次各出一份带独立签字栏的报告，全部归档到 `.workbuddy/reports/`。审次单向流转，任一 `FAIL` 退回上一环节；**终审未签发（或 FAIL 未清零）不得 promote**。
 - `_promote_draft.py` 默认执行 humanizer 自检，FAIL 拒绝同步；`--force` 为例外通道，`--no-check` 不推荐。
 - 纯勘误（错别字、标点、繁简、断行）可直改定稿并用 `_sync_draft.py` 回写草稿。
 

@@ -26,12 +26,13 @@
   - 正文定稿：`chapters/{第X卷 卷名}/{第Y幕 幕名}/第NNN章 四字标题.md`
   - 草稿：`notes-personal/{对象}草稿.md`（平铺单文件，不分子目录）
   - 设定：`worldbuilding/`；角色：`characters/`；幕讨论：`issues/`；报告：`.workbuddy/reports/`
-- **改动顺序（强制）**：先改 `notes-personal/` 草稿 → `humanizer_check.py` 自审 → 归档审核报告 → 审核 PASS → `_promote_draft.py <章号>` 同步 `chapters/` 定稿 → 记 `CHANGELOG.md` / `progress.md`。反向 `_sync_draft.py` 仅勘误用。
+- **改动顺序（强制）**：先改 `notes-personal/` 草稿 → `humanizer_check.py` 自审 → 三审（初审 `--stage first` → 复审 `--stage second` → 终审 `--stage final`）各归档报告 → 终审签发 PASS → `_promote_draft.py <章号>` 同步 `chapters/` 定稿 → 记 `CHANGELOG.md` / `progress.md`。反向 `_sync_draft.py` 仅勘误用。
 - **脚本迁移记录（2026-09-27）**：原 `-1928/tools/` 4 个脚本迁入本仓库 `scripts/`，子项目 `tools/` 目录删除；`_promote_draft.py` 改为以当前工作目录为项目根（新增 `--root`），humanizer 按脚本自身目录定位。
-- **审稿脚本（2026-09-27 新增）**：`review_all.py`（综合，一次跑完全部门禁）+ 四个单维度脚本（规模／一致性／合理化／标点），共用 `_review_lib.py`；命名兼容通用 `ch-001-title.md` 与本子项目 `第NNN章 标题.md`，支持 `--draft` 直审草稿。送审前跑 `review_all.py`，FAIL 未清零不得 promote。
+- **审稿脚本（2026-09-27 新增）**：`review_all.py`（综合，一次跑完门禁）+ 四个单维度脚本（规模／一致性／合理化／标点），共用 `_review_lib.py`；命名兼容通用 `ch-001-title.md` 与本子项目 `第NNN章 标题.md`，支持 `--draft` 直审草稿。
+- **三审制度（2026-10-14 新增）**：`review_all.py --stage first/second/final` 分初审（责任编辑·机械文字层）／复审（编辑部主任·内容层）／终审（主编·全维回归+签发），各出独立签字栏报告。审次单向流转，后审可推翻前审，任一 FAIL 退回上一环节；**终审未签发不得 promote**。
 
 - **工程经验回流（2026-10-07）**：本子项目自建过 827 个脚本、227 份报告、27 份分层记忆档与一套裁决台账（编号至 D558）。这些能力已按优先级回抽进本仓库：引用体检 `check_refs.py`、文件卫生 `scan_hygiene.py`、子项目脚手架 `init_subproject.py`，约定部分写入 [`references/subproject-playbook.md`](references/subproject-playbook.md)。
-- **上架前自检**：`scan_hygiene.py --fail-on crlf,junk,mojibake`、`check_refs.py --kind MISSING --kind NONRELEASE`、送审前 `review_all.py`。
+- **上架前自检**：`scan_hygiene.py --fail-on crlf,junk,mojibake`、`check_refs.py --kind MISSING --kind NONRELEASE`、送审走三审 `review_all.py --stage first/second/final`。
 
 ## 新增子项目
 

@@ -6,11 +6,18 @@
   - 项目根判定与章节索引（兼容 `第NNN章 标题.md` 与 `ch-NNN-title.md` 两种命名）
   - 正文抽取（去 YAML frontmatter / 元数据引用行 / 代码块）与中文字数口径
   - Issue / Result 数据结构、等级汇总与 Markdown 报告渲染
+  - 三审制度（初审／复审／终审）的审次定义与签字栏渲染
 
 等级约定（与 humanizer_check.py 一致）：
     FAIL —— 必须修改，不得进定稿
     WARN —— 需人工复核确认（综合结论记 REVISE）
     PASS —— 达标
+
+三审制度约定：
+    初审 first  —— 责任编辑，机械层与文字层；FAIL 就地退回作者，不得送复审
+    复审 second —— 编辑部主任，内容层；有权推翻初审，FAIL 不得送终审
+    终审 final  —— 主编，全维回归确认与通读签发；有权推翻前两审，通过方可 promote
+    审次之间只可单向流转并逐级退回，前审不得推翻后审结论。
 """
 import os
 import re
@@ -35,6 +42,75 @@ CN_RE = re.compile(r'[\u4e00-\u9fff]')
 Issue = namedtuple('Issue', ['level', 'category', 'detail', 'where'])
 Result = namedtuple('Result', ['name', 'path', 'issues', 'stats'])
 Item = namedtuple('Item', ['num', 'name', 'path', 'text'])
+
+# ---------- 三审制度 ----------
+
+# 维度归属：初审管机械层与文字层，复审管内容层，终审全维回归确认。
+# 'all' 表示该审次覆盖 review_all.py 的全部维度（DIM_KEYS 顺序）。
+STAGE_DIMS = {
+    'first': ('humanizer', 'scale', 'punctuation'),
+    'second': ('continuity', 'rationality'),
+    'final': 'all',
+}
+
+# 审次 → (中文名, 责任角色, 职责一句话, 签字栏标题, 放行条件)
+STAGES = {
+    'first': ('初审', '责任编辑',
+              '机械层与文字层：AI 痕迹、字数规模、标点正字',
+              '初审（责任编辑）',
+              '本审 FAIL 清零方可送复审；FAIL 项就地退回作者修改'),
+    'second': ('复审', '编辑部主任',
+               '内容层：跨章一致性、情节合理化与伏笔回收',
+               '复审（编辑部主任）',
+               '本审 FAIL 清零方可送终审；FAIL 项退回责任编辑，可推翻初审结论'),
+    'final': ('终审', '主编',
+              '全维回归确认 + 通读签发：确认前两审整改到位、无新增问题',
+              '终审签发（主编）',
+              '全维无 FAIL 且每条 WARN 已人工裁决，签发后方可 promote 定稿；可推翻前两审结论'),
+}
+
+STAGE_KEYS = ('first', 'second', 'final')
+
+
+def stage_label(key):
+    """审次中文名，如 first → 初审；未知审次原样返回"""
+    return STAGES[key][0] if key in STAGES else key
+
+
+def stage_dims(key, all_keys):
+    """该审次实际参审的维度键列表；final 覆盖全部维度"""
+    dims = STAGE_DIMS.get(key)
+    return list(all_keys) if dims == 'all' else [d for d in (dims or ()) if d in all_keys]
+
+
+def stage_intro(key, all_keys):
+    """审次说明行，写入报告抬头"""
+    if key not in STAGES:
+        return []
+    cn_name, role, duty, _sign, gate = STAGES[key]
+    return ['- 审次：**%s**（%s）—— %s' % (cn_name, role, duty),
+            '- 本审维度：%s' % '、'.join(stage_dims(key, all_keys)),
+            '- 流转：%s' % gate]
+
+
+def signoff(key):
+    """按审次渲染签字栏；未指定审次时退回通用「主编复核」栏（兼容旧调用）"""
+    if key not in STAGES:
+        return ['- [ ] 主编复核：__________ ｜ 日期：__________',
+                '- [ ] 复核结论：PASS / REVISE / FAIL']
+    cn_name, role, _duty, title, _gate = STAGES[key]
+    lines = ['- [ ] **%s** 签字：__________ ｜ 日期：__________' % title]
+    if key == 'final':
+        lines += ['- [ ] 全维回归：初审／复审 FAIL 项已整改并复核',
+                  '- [ ] WARN 逐条裁决：保留 / 修改 / 说明理由']
+    else:
+        nxt = STAGE_KEYS[STAGE_KEYS.index(key) + 1]
+        lines.append('- [ ] 本审 FAIL 已清零，同意送%s' % stage_label(nxt))
+    lines.append('- [ ] 审次结论：PASS / REVISE / FAIL（FAIL 退回%s）'
+                 % ('作者修改' if key == 'first' else '上一审次'))
+    note = '可推翻前审结论，须写明理由' if key != 'first' else '本审为首审，无前审可推翻'
+    lines.append('- 备注：__________（%s%s）' % (role if key != 'final' else cn_name, note))
+    return lines
 
 
 # ---------- 项目根与文件定位 ----------
@@ -159,8 +235,8 @@ def count_levels(results):
 
 # ---------- 报告渲染 ----------
 
-def render(title, results, intro=None, extra_sections=None, obj_label='审查对象'):
-    """渲染 Markdown 报告；extra_sections: [(小节标题, 文本)]"""
+def render(title, results, intro=None, extra_sections=None, obj_label='审查对象', stage=''):
+    """渲染 Markdown 报告；extra_sections: [(小节标题, 文本)]；stage 非空时按该审次出签字栏"""
     c = count_levels(results)
     lines = ['# %s' % title, '',
              '> 生成时间：%s ｜ 判定口径：FAIL 必须修改，WARN 需人工复核，PASS 达标'
@@ -192,10 +268,7 @@ def render(title, results, intro=None, extra_sections=None, obj_label='审查对
         n += 1
         lines += ['', '## %s、%s' % (cn_num[n - 1], head), '', txt]
     n += 1
-    lines += ['', '---', '',
-              '## %s、签字栏' % cn_num[n - 1], '',
-              '- [ ] 主编复核：__________ ｜ 日期：__________',
-              '- [ ] 复核结论：PASS / REVISE / FAIL', '']
+    lines += ['', '---', '', '## %s、签字栏' % cn_num[n - 1], ''] + signoff(stage) + ['']
     return '\n'.join(lines)
 
 
@@ -204,7 +277,7 @@ def emit(md, out=None):
         d = os.path.dirname(os.path.abspath(out))
         if d:
             os.makedirs(d, exist_ok=True)
-        open(out, 'w', encoding='utf-8').write(md)
+        open(out, 'w', encoding='utf-8', newline='\n').write(md)
         print('报告已写入：%s' % out)
     print(md)
 

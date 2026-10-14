@@ -109,18 +109,31 @@ updates rather than writing state directly, preserving role isolation (spec Sect
 
 ## Verification Gates
 
-Before publishing any chapter, ALL of the following gates must pass:
+Chapters clear a **three-stage review** (三审制度) then the checklist below. Each stage runs
+`review_all.py --stage <stage>`, files its own report, and signs off separately. Stages flow
+**one way** — a later stage may overturn an earlier verdict (with a written reason), never the
+reverse; any `FAIL` returns the chapter to the previous step, and `_promote_draft.py` is blocked
+until 终审 signs off. Full roles, dimensions, flow rules and commands live in
+[method-patterns-publishing.md §7](references/method-patterns-publishing.md).
 
-- [ ] **Review gate** — `review_all.py` reports no `FAIL`; every `WARN` has been reviewed by a human
-- [ ] **Continuity consistency** — Character names, locations, timeline events match state files
-- [ ] **Style consistency** — Voice, tense, register match established style rules
-- [ ] **Plot logic** — Causality holds; motivations are clear; foreshadowing payoffs are tracked
-- [ ] **Pacing analysis** — Scene-to-sequel ratio is balanced; tension curve is intentional
-- [ ] **Dialogue authenticity** — Each character has distinguishable voice patterns
-- [ ] **License compliance** — Generated content includes CC BY-NC-SA 4.0 license header
-- [ ] **File naming** — Chapter file follows `ch-{number}-{title}.md` convention
-- [ ] **State updated** — Timeline, character states, and thread ledger are current
-- [ ] **Line count compliance** — No file exceeds 500 lines (see [Section 8.1](README%20FOR%20AI.md#81-hard-limit) splitting rule)
+| Stage | `--stage` | Role | Dimensions | Exit gate |
+|-------|-----------|------|-----------|-----------|
+| 初审 | `first` | 责任编辑 | humanizer · scale · punctuation | no `FAIL` → 复审 |
+| 复审 | `second` | 编辑部主任 | continuity · rationality | no `FAIL` → 终审 |
+| 终审 | `final` | 主编 | all five (regression) + read-through | no `FAIL` & every `WARN` adjudicated → may `promote` |
+
+Checklist — all must also pass before publish:
+
+- [ ] **Three-stage review** — 初审/复审/终审 each report no `FAIL`; 终审 signed off; every `WARN` human-adjudicated
+- [ ] **Continuity consistency** — names, locations, timeline events match state files
+- [ ] **Style consistency** — voice, tense, register match established style rules
+- [ ] **Plot logic** — causality holds; motivations clear; foreshadowing payoffs tracked
+- [ ] **Pacing analysis** — scene-to-sequel ratio balanced; tension curve intentional
+- [ ] **Dialogue authenticity** — each character has a distinguishable voice
+- [ ] **License compliance** — generated content includes the CC BY-NC-SA 4.0 header
+- [ ] **File naming** — chapter file follows `ch-{number}-{title}.md`
+- [ ] **State updated** — timeline, character states, and thread ledger are current
+- [ ] **Line count compliance** — no file exceeds 500 lines (see [§8.1](README%20FOR%20AI.md#81-hard-limit))
 
 ## Cross-References
 
