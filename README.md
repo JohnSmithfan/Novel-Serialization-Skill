@@ -4,7 +4,7 @@
 
 [![License: GPL-3.0](https://img.shields.io/badge/License-GPL--3.0-blue.svg)](LICENSE)
 [![License: CC BY-NC-SA 4.0](https://img.shields.io/badge/License--Novel%20Content-CC%20BY--NC--SA%204.0-lightgrey.svg)](LICENSES/CC-BY-NC-SA-4.0.txt)
-[![Skill Version](https://img.shields.io/badge/Skill%20Version-1.2.0-orange)](SKILL.md)
+[![Skill Version](https://img.shields.io/badge/Skill%20Version-1.3.0-orange)](SKILL.md)
 [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](CODE_OF_CONDUCT.md)
 
 ---
@@ -117,14 +117,25 @@ github-novel-serialization-skill/
 +-- SUPPORT.md                          # Where to go with which question
 +-- GOVERNANCE.md                       # Roles, decision process, release policy
 +-- CITATION.cff                        # Machine-readable citation metadata
++-- security.txt                        # RFC 9116 contact for security tooling
++-- pyproject.toml                      # Metadata + pytest / ruff configuration
++-- requirements-dev.txt                # Development-only dependencies
++-- Makefile                            # Thin proxy to scripts/dev.py
 +-- LICENSE                             # GPL-3.0
 +-- LICENSES/                           # Additional licenses
 |   +-- CC-BY-NC-SA-4.0.txt
 +-- .editorconfig / .gitattributes / .gitignore
 +-- .markdownlint.json / .pre-commit-config.yaml
 |
++-- docs/                               # Engineering documentation
+|   +-- README.md                       # Index
+|   +-- adr/                            # Architecture decision records
+|
++-- tests/                              # Regression tests for scripts/
+|
 +-- scripts/                            # Shared automation scripts (consumed by subprojects)
 |   +-- README.md                       # Script catalog & invocation conventions
+|   +-- dev.py                          # One entry point for every local gate
 |   +-- humanizer_check.py              # De-AI-tone self-check (PASS/WARN/FAIL)
 |   +-- _list_hits.py                   # List flagged sentences for manual rewrite
 |   +-- _promote_draft.py               # Draft -> release sync (snapshot, gates)
@@ -182,10 +193,32 @@ github-novel-serialization-skill/
     +-- release.yml
     +-- workflows/
         +-- ci.yml
+        +-- codeql.yml
         +-- novel-release.yml
         +-- label-sync.yml
         +-- stale.yml
 ```
+
+## Development
+
+The runtime scripts need nothing but the standard library. The gates need a
+little more:
+
+```bash
+python -m pip install -r requirements-dev.txt
+pre-commit install && pre-commit install --hook-type commit-msg
+```
+
+| Command | What it runs |
+|---|---|
+| `python scripts/dev.py all` | hygiene, references, lint, tests — everything CI runs |
+| `python scripts/dev.py hygiene` | CRLF, encoding damage, junk files, 500-line budget |
+| `python scripts/dev.py refs` | every reference resolves; release files stay inside the release tree |
+| `python scripts/dev.py lint` | byte-compile, plus ruff when installed |
+| `python scripts/dev.py test` | the `tests/` suite |
+| `python scripts/dev.py scaffold --name "书名" --root ../my-novel` | new subproject |
+
+`make all` does the same where make is available.
 
 > **Note:** generation-compliance audit reports (`README_FOR_AI_Audit_Report*.md`) are produced on
 > demand and are **not** committed — `.gitignore` excludes them. Do not expect them in the tree.
@@ -218,6 +251,10 @@ Rules: scripts stay in this repo's `scripts/` (never copied into a subproject as
 invoked from the subproject root — the subproject root is the script's working directory.
 See [SUBPROJECTS.md](SUBPROJECTS.md), [scripts/README.md](scripts/README.md) and the
 [Subproject Playbook](references/subproject-playbook.md).
+
+Design decisions that shape this repository — why reports are not committed, why
+release files may only reference release files, why two chapter naming schemes are
+legal — are recorded in [docs/adr/](docs/adr/README.md).
 
 ---
 

@@ -1,10 +1,14 @@
 # Pre-commit hooks.
-# Install:  pip install pre-commit && pre-commit install
+# Install:  pip install -r requirements-dev.txt
+#           pre-commit install
+#           pre-commit install --hook-type commit-msg   # for the commit format
 # Run once: pre-commit run --all-files
 #
 # The CRLF hooks matter more than they look. On Windows, a Python script that
 # writes text with the default newline rewrites an entire Markdown file as CRLF.
 # See scripts/README.md.
+
+default_install_hook_types: [pre-commit, commit-msg]
 
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
@@ -22,6 +26,13 @@ repos:
         args: [--maxkb=1024]
       - id: detect-private-key
 
+  - repo: https://github.com/compilerla/conventional-pre-commit
+    rev: v3.6.0
+    hooks:
+      - id: conventional-pre-commit
+        stages: [commit-msg]
+        args: [feat, fix, docs, style, refactor, perf, test, build, ci, chore, release]
+
   - repo: local
     hooks:
       - id: scan-hygiene
@@ -30,5 +41,17 @@ repos:
         args: >
           --allow README FOR AI.md,CHANGELOG.md,LICENSE,LICENSES/CC-BY-NC-SA-4.0.txt
           --fail-on crlf,junk,mojibake
+        language: system
+        pass_filenames: false
+
+      - id: check-refs
+        name: check_refs.py (release files reference release files)
+        entry: python scripts/check_refs.py --root . --fail-on NONRELEASE
+        language: system
+        pass_filenames: false
+
+      - id: pytest
+        name: pytest (scripts regression suite)
+        entry: python -m pytest
         language: system
         pass_filenames: false

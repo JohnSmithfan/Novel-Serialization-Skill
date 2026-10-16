@@ -73,6 +73,34 @@ Scripts are shared infrastructure consumed by every subproject:
 3. Writes text with `newline='\n'`
 4. No absolute paths to any subproject
 5. Listed in `scripts/README.md`, and in `SUBPROJECTS.md` for the subprojects that use it
+6. Ships with tests in `tests/` — a script without a test is a script nobody can change safely
+
+## Branch protection
+
+`main` is protected. A push straight to it is rejected; every change arrives as
+a pull request. Required before merge:
+
+- The `CI` workflow is green (hygiene, references, tests, metadata)
+- One approving review, requested automatically by `CODEOWNERS`
+- Force push and branch deletion disabled
+
+These are settings, not files, so they cannot live in this repository. They are
+recorded here because a CODEOWNERS file without them requests reviewers who can
+be ignored.
+
+## Issue responsiveness
+
+Labels are the taxonomy (`.github/labels.yml`, synced by the `label-sync`
+workflow). Targets, not guarantees:
+
+| Label | First response |
+|---|---|
+| `bug` | 7 days |
+| `security` | 48 hours, privately |
+| `enhancement`, `docs` | 30 days |
+
+The `stale` workflow closes an issue that has had no activity for 60 days and
+no label that pins it open.
 
 ## Code of conduct
 

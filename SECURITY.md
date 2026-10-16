@@ -8,9 +8,12 @@ This table lists the release lines that currently receive security updates.
 
 | Version | Supported          |
 | ------- | ------------------ |
-| 1.1.x   | :white_check_mark:  |
-| 1.0.x   | :white_check_mark:  |
-| < 1.0   | :x:                |
+| 1.3.x   | :white_check_mark:  |
+| 1.2.x   | :warning:  security fixes only |
+| < 1.2   | :x:                |
+
+The same information is published in machine-readable form in
+[security.txt](security.txt) (RFC 9116) for tooling that crawls repositories.
 
 ### End-of-Life (EOL) Policy
 

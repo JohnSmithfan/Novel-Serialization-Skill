@@ -5,10 +5,50 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [1.3.0] - 2026-10-17
 
 ### Added
-- **Three-stage review (三审制度)** for chapter promotion: 初审 (责任编辑, mechanical &
+- `tests/`: regression suite for the shared scripts — 34 tests covering the
+  release-only reference rule (`check_refs`), the hygiene scanner
+  (`scan_hygiene`), the subproject scaffold (`init_subproject`) and the
+  de-AI-tone gate (`humanizer_check`). Run with `pytest`, or via
+  `python scripts/dev.py test`.
+- `scripts/dev.py`: one entry point for every local gate — `test`, `hygiene`,
+  `refs`, `lint`, `scaffold`, `all`. Exits with the first failing gate's code.
+- `Makefile`: thin proxy to `scripts/dev.py` for contributors who have make.
+  Windows contributors call `scripts/dev.py` directly.
+- `pyproject.toml`: project metadata plus `[tool.pytest.ini_options]` and
+  `[tool.ruff]`; `requirements-dev.txt` for the development-only dependencies.
+- `docs/`: engineering documentation directory with an ADR index
+  (`docs/adr/README.md`) and three records — 0001 reports are not released,
+  0002 release files reference release files only, 0003 dual-track chapter
+  naming. The directory holds decisions, not reports.
+- `security.txt` (RFC 9116): machine-readable contact for security tooling,
+  mirroring `SECURITY.md`.
+- `.github/workflows/codeql.yml`: CodeQL scan (`security-extended`) on push,
+  pull request and a weekly schedule.
+- `.pre-commit-config.yaml`: `conventional-pre-commit` on the `commit-msg`
+  stage, plus local hooks for `check_refs.py` and `pytest`.
+- `.gitattributes`: binary markers for image and archive types, and linguist
+  overrides (`CITATION.cff` counted as YAML, generated audit reports excluded).
+
+### Changed
+- `.github/workflows/ci.yml`: new `tests` job (`pip install -r
+  requirements-dev.txt && pytest`); the required-community-files check now also
+  asserts `security.txt`, `pyproject.toml`, `requirements-dev.txt`, `Makefile`,
+  `docs/README.md`, `docs/adr/README.md` and `tests/conftest.py`.
+- `CONTRIBUTING.md`: added a Development Environment section (`requirements-dev.txt`,
+  `pre-commit install --hook-type commit-msg`, `python scripts/dev.py all`); step 4 of
+  the workflow now names the four gates instead of claiming no validation tooling
+  exists; the project-structure tree lists `docs/`, `tests/`, `scripts/` and the
+  full `.github/` tree.
+- `README.md`: new Development section with the gate table; directory structure
+  updated; link to the ADR index from the Subprojects section.
+
+### Fixed
+- `SECURITY.md` supported-versions table listed 1.1.x and 1.0.x as supported
+  after 1.2.0 shipped. Now 1.3.x supported, 1.2.x security-only, older lines
+  unsupported, with a pointer to `security.txt`.
   textual layer) → 复审 (编辑部主任, content layer) → 终审 (主编, full-dimension regression
   + read-through sign-off). One-way flow; a later stage may overturn an earlier verdict with
   a written reason, never the reverse; any `FAIL` blocks `_promote_draft.py` until 终审 signs off.
@@ -242,7 +282,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-[Unreleased]: https://github.com/JohnSmithfan/github-novel-serialization-skill/compare/v1.2.0...HEAD
+[Unreleased]: https://github.com/JohnSmithfan/github-novel-serialization-skill/compare/v1.3.0...HEAD
+[1.3.0]: https://github.com/JohnSmithfan/github-novel-serialization-skill/compare/v1.2.0...v1.3.0
 [1.2.0]: https://github.com/JohnSmithfan/github-novel-serialization-skill/compare/v1.1.2...v1.2.0
 [1.1.2]: https://github.com/JohnSmithfan/github-novel-serialization-skill/compare/v1.1.1...v1.1.2
 [1.1.1]: https://github.com/JohnSmithfan/github-novel-serialization-skill/compare/v1.1.0...v1.1.1

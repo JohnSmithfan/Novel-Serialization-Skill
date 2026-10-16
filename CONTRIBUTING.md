@@ -12,6 +12,7 @@ changes to this document in a pull request.
 - [Code of Conduct](#code-of-conduct)
 - [Getting Started](#getting-started)
   - [Project Structure](#project-structure)
+  - [Development Environment](#development-environment)
   - [Development Workflow](#development-workflow)
 - [How To Contribute](#how-to-contribute)
   - [Reporting Bugs](#reporting-bugs)
@@ -43,16 +44,32 @@ github-novel-serialization-skill/
 ├── README.md                           # Project overview, quick start, architecture diagram
 ├── README FOR AI.md                    # Meta-instructions for AI generation (seed file)
 ├── .gitignore                          # Git ignore rules
+├── .gitattributes                      # Line-ending and binary policy
 ├── .editorconfig                       # Editor configuration
+├── .markdownlint.json                  # Markdown lint rules
+├── .pre-commit-config.yaml             # Local gates (hygiene, references, tests, commit format)
+├── pyproject.toml                      # Project metadata + pytest / ruff configuration
+├── requirements-dev.txt                # Development-only dependencies
+├── Makefile                            # Thin proxy to scripts/dev.py
+├── security.txt                        # RFC 9116 machine-readable contact
 ├── LICENSE                             # GNU General Public License v3.0 (GPL-3.0)
 ├── LICENSES/                           # Additional license texts
 │   └── CC-BY-NC-SA-4.0.txt             # Full CC BY-NC-SA 4.0 license text
 ├── CODE_OF_CONDUCT.md                  # Community behavior standards
 ├── CONTRIBUTING.md                     # Contribution guidelines
 ├── SECURITY.md                         # Security policy & vulnerability reporting
+├── SUPPORT.md                          # Where to get help
+├── GOVERNANCE.md                       # Roles, responsibilities, decision process
 ├── CHANGELOG.md                        # Version history (Keep a Changelog format)
+├── CITATION.cff                        # Citation metadata
 │
 ├── SKILL.md                            # Index + quick-reference (≤500 lines)
+│
+├── docs/                               # Engineering documentation
+│   ├── README.md                       # Index of this directory
+│   └── adr/                            # Architecture decision records
+│
+├── tests/                              # Regression tests for scripts/
 │
 ├── references/                         # Deep documentation & code templates
 │   ├── method-patterns.md              # Master template file (split if >500 lines)
@@ -86,33 +103,82 @@ github-novel-serialization-skill/
 │   └── continuity-tracker/
 │       └── SKILL.md                    # State tracking & memory persistence sub-skill
 │
+├── scripts/                            # Shared automation (invoked from a subproject root)
+│   ├── README.md                       # Catalog & invocation conventions
+│   ├── dev.py                          # One entry point for every local gate
+│   ├── check_refs.py                   # Reference integrity (release-only rule)
+│   ├── scan_hygiene.py                 # CRLF / mojibake / junk / line budget
+│   ├── init_subproject.py              # Subproject scaffold
+│   ├── humanizer_check.py              # De-AI-tone gate
+│   ├── review_all.py                   # All-in-one review report
+│   └── _review_lib.py                  # Shared library for the review scripts
+│
 └── .github/                            # GitHub community health files
+    ├── CODEOWNERS                      # Directory-level review assignment
     ├── ISSUE_TEMPLATE/
     │   ├── bug-report.yml
     │   ├── feature-request.yml
+    │   ├── errata.yml
+    │   ├── docs.yml
     │   └── config.yml
     ├── PULL_REQUEST_TEMPLATE.md
+    ├── PULL_REQUEST_TEMPLATE/
+    │   └── content.md
     ├── FUNDING.yml
     ├── dependabot.yml
+    ├── labels.yml
+    ├── release.yml
     └── workflows/
+        ├── ci.yml                      # hygiene + references + tests + metadata
+        ├── codeql.yml                  # Security scan
+        ├── label-sync.yml              # Label taxonomy
+        ├── stale.yml                   # Stale issue / PR handling
         └── novel-release.yml           # Automated release workflow template
 ```
+
+### Development Environment
+
+The runtime scripts need nothing but the standard library. The gates need a
+little more:
+
+```bash
+python -m pip install -r requirements-dev.txt
+pre-commit install
+pre-commit install --hook-type commit-msg   # enforces the commit format
+```
+
+Everything CI runs is available locally through one entry point:
+
+```bash
+python scripts/dev.py all        # hygiene + references + lint + tests
+make all                         # same, where make is available
+```
+
+Individual gates: `test`, `hygiene`, `refs`, `lint`, `scaffold`.
+
+Tests live in `tests/` and run in about a second. A change to a script is
+expected to come with a test; a change that alters what a script reports must
+update the tests that assert the old behaviour, in the same commit.
 
 ### Development Workflow
 
 1. Fork the repository
 2. Create a branch using the naming convention below (`git checkout -b feat/my-feature`)
 3. Make your changes following the guidelines below
-4. Validate your changes:
-   - Check that every `SKILL.md` has valid YAML frontmatter with `name`,
-     `description`, `license: GPL-3.0` and `novel_content_license: CC-BY-NC-SA-4.0`
-   - Verify every internal cross-reference in the Markdown files resolves to a
-     file that exists
-   - Confirm no file exceeds the 500-line limit (see [The 500-Line Rule](#the-500-line-rule))
+4. Validate your changes. All four gates run locally:
+   ```bash
+   python scripts/dev.py all
+   ```
+   They check, in order:
+   - **hygiene** — no CRLF, no encoding damage, no editor droppings, no file
+     over the 500-line budget (see [The 500-Line Rule](#the-500-line-rule))
+   - **refs** — every reference resolves, and no release file points outside
+     the release tree (see [ADR-0002](docs/adr/0002-release-references-release.md))
+   - **lint** — byte-compilation, plus ruff when installed
+   - **test** — the `tests/` suite
 
-   > There is no automated validation script in this repository yet. These are manual
-   > checks; if you want to add tooling for them, see
-   > [Suggesting Enhancements](#suggesting-enhancements).
+   To read a full report instead of a pass/fail, call the scripts directly;
+   see [scripts/README.md](scripts/README.md).
 5. Commit your changes using conventional commit format
 6. Push to the branch (`git push origin feat/my-feature`)
 7. Open a Pull Request
