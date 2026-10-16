@@ -46,7 +46,7 @@ repos:
 
       - id: check-refs
         name: check_refs.py (release files reference release files)
-        entry: python scripts/check_refs.py --root . --fail-on NONRELEASE
+        entry: python scripts/check_refs.py --root . --fail-on NONRELEASE,MISSING
         language: system
         pass_filenames: false
 

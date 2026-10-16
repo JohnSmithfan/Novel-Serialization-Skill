@@ -63,7 +63,7 @@ python "../GitHub Novel Serialization Skill/scripts/review_punctuation.py"
 | `review_rationality.py` | **合理化审查**：重复段落（章内／跨章）、超长段与残句、对话占比、序数跳号、视角混用、伏笔未回收、大纲要点偏离 | `--outline`、`--max-para`、`--max-dialogue`、`--min-cover`、`--out` |
 | `review_punctuation.py` | **标点审查**：引号错位、半角标点、直引号、繁体混入、英文残留、标点密度、重复与行首标点、书名号配对 | `--max-dash`、`--max-ellipsis`、`--max-excl`、`--out` |
 | `_review_lib.py` | 审稿脚本公共库（内部模块，不直接执行）：项目根判定、章节索引、字数口径、报告渲染 | — |
-| `check_refs.py` | **引用体检**：七档判定 `OK/LOCAL/TEMPLATE/BARE/PRIVATE_OK/NONRELEASE/MISSING`；**release 文件只引用 release 文件，非 release 文件可引用全部**；反引号路径按仓库根起算、真链接（label 在 `[]`、target 在 `()`）按本文件相对，两套体系分开判 | `--root`、`--json`、`--kind`、`--fail-on`、`--ignore`、`--out` |
+| `check_refs.py` | **引用体检**：八档判定 `OK/LOCAL/TEMPLATE/BARE/PRIVATE_OK/NONRELEASE/MISSING/PRIVATE_MISSING`；**release 文件只引用 release 文件，非 release 文件可引用全部**；反引号路径按仓库根起算、真链接（label 在 `[]`、target 在 `()`）按本文件相对，两套体系分开判。豁免模式写在仓库根 `.refsignore`（本地/pre-commit/CI 三处共用同一份） | `--root`、`--json`、`--kind`、`--fail-on`、`--ignore`、`--ignore-file`、`--out` |
 | `scan_hygiene.py` | **文件卫生**：CRLF／乱码／临时垃圾／空文件／缺尾换行／超行数预算；`--fix` 就地改回 LF | `--root`、`--fix`、`--max-lines`、`--allow`、`--json`、`--fail-on`、`--out` |
 | `init_subproject.py` | **子项目脚手架**：生成目录骨架、Issue/PR 模板、CODEOWNERS、裁决台账、报告索引、分层记忆入口 | `--name`、`--root`、`--scripts`、`--owner`、`--force`、`--dry-run` |
 

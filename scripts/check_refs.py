@@ -19,7 +19,7 @@ Why this exists
 Long-running serialisation projects accumulate Markdown files that reference
 each other by relative path. A file that is renamed, moved or retired leaves
 behind dangling references that no linter catches, because they are plain text
-inside prose. This script classifies every reference into one of seven buckets so
+inside prose. This script classifies every reference into one of eight buckets so
 that a maintainer can triage rather than eyeball.
 
 Buckets (same vocabulary as the -1928 subproject's field tooling)
@@ -37,7 +37,11 @@ PRIVATE_OK  Target sits in a private work area **and the referencing file is
 NONRELEASE  Target sits in a private work area **and the referencing file is
             release**. This is the violation: shipped docs must not point at
             files the reader cannot open.
-MISSING     Target does not exist.
+MISSING          Target does not exist, and the referencing file is release.
+                This is a defect: a shipped document points at nothing.
+PRIVATE_MISSING  Target does not exist, and the referencing file is a report
+                or working note. Expected — those were written about another
+                tree — so it is listed but never gated on.
 
 Two systems, never mixed
 ------------------------
@@ -53,6 +57,14 @@ Usage
     python scripts/check_refs.py --root . --json          # machine readable
     python scripts/check_refs.py --root . --kind MISSING  # only one bucket
     python scripts/check_refs.py --root . --fail-on MISSING,NONRELEASE
+    python scripts/check_refs.py --root . --ignore-file ''  # exemptions off
+
+Exemptions
+----------
+Paths that are *described* but do not exist in this repository — subproject
+state files, example manuscripts, paths written from a subproject's point of
+view — are listed in ``.refsignore``, one regex per line. The same file is
+read locally, in pre-commit and in CI, so the three cannot disagree.
 
 Exit codes
 ----------
@@ -83,6 +95,10 @@ from urllib.parse import unquote
 # private files must be allowed rather than flagged.
 SKIP_DIRS = {".git", "node_modules", "__pycache__", ".venv", "venv"}
 
+# Exemption patterns live here, not in a CI flag, so that a local run, the
+# pre-commit hook and CI all judge the same tree. See .refsignore.
+DEFAULT_IGNORE_FILE = ".refsignore"
+
 # Directories whose contents are real files but must never be referenced from
 # released content.
 NONRELEASE_DIRS = ("notes-personal", "_trash", "_drafts", "drafts", ".workbuddy")
@@ -106,7 +122,8 @@ BACKTICK_RE = re.compile(r"`([^`\n]+)`")
 # A backtick token is only treated as a path when it looks like one.
 PATHISH_RE = re.compile(r"^[\w\-./\\一-鿿]+\.(md|py|yml|yaml|json|txt|sh)$", re.UNICODE)
 
-SEVERITY_ORDER = ["OK", "LOCAL", "TEMPLATE", "BARE", "PRIVATE_OK", "NONRELEASE", "MISSING"]
+SEVERITY_ORDER = ["OK", "LOCAL", "TEMPLATE", "BARE", "PRIVATE_OK", "NONRELEASE",
+                 "MISSING", "PRIVATE_MISSING"]
 
 
 # --------------------------------------------------------------------------
@@ -210,6 +227,37 @@ def classify_backtick(token: str, root: Path, released: set,
 # Core
 # --------------------------------------------------------------------------
 
+def load_ignore_file(root: Path, name: str) -> list:
+    """Read exemption patterns from ``root/name``; return the pattern list.
+
+    Blank lines and ``#`` comments are ignored, so the file can explain why
+    each pattern exists. Keeping the exemptions in a file rather than in a CI
+    flag means the same list applies locally, in pre-commit and in CI.
+    """
+    if not name:
+        return []
+    p = root / name
+    if not p.is_file():
+        return []
+    out = []
+    for line in p.read_text(encoding="utf-8", errors="replace").splitlines():
+        s = line.strip()
+        if not s or s.startswith("#"):
+            continue
+        out.append(s)
+    return out
+
+
+def build_ignore(root: Path, cli_patterns: list, ignore_file: str) -> "re.Pattern | None":
+    patterns = cli_patterns + load_ignore_file(root, ignore_file)
+    if not patterns:
+        return None
+    try:
+        return re.compile("|".join(patterns))
+    except re.error as exc:
+        raise SystemExit(f"error: bad ignore pattern: {exc}")
+
+
 def scan(root: Path, ignore_re=None):
     root = root.resolve()
     # Release tree = everything tracked-ish that is not a private area.
@@ -244,6 +292,10 @@ def scan(root: Path, ignore_re=None):
             bucket, resolved = classify(target, p, root, released, src_release)
             if bucket is None:
                 continue
+            if bucket == "MISSING" and not src_release:
+                # A report or working note pointing at something that is not
+                # here is expected — it was written about a different tree.
+                bucket = "PRIVATE_MISSING"
             key = (bucket, resolved)
             if key in seen:
                 continue
@@ -260,6 +312,8 @@ def scan(root: Path, ignore_re=None):
                 continue
             # Backtick paths are documentation: record them in their own bucket.
             bucket = "BARE" if bucket in ("OK", "LOCAL") else bucket
+            if bucket == "MISSING" and not src_release:
+                bucket = "PRIVATE_MISSING"
             key = (bucket, resolved)
             if key in seen:
                 continue
@@ -284,7 +338,8 @@ def render(findings, root: Path) -> str:
         "BARE": "backtick path (documentation, root-relative)",
         "PRIVATE_OK": "private target, referenced from a non-release file — allowed",
         "NONRELEASE": "private target, referenced from a RELEASE file — must be fixed",
-        "MISSING": "target does not exist",
+        "MISSING": "target does not exist, and the source is a release file",
+        "PRIVATE_MISSING": "target does not exist; source is a report or working note",
     }
     for b in SEVERITY_ORDER:
         lines.append(f"| {b} | {len(findings[b])} | {meaning[b]} |")
@@ -307,7 +362,7 @@ def render(findings, root: Path) -> str:
 
 
 def main(argv=None) -> int:
-    ap = argparse.ArgumentParser(description="Reference integrity check (seven buckets).")
+    ap = argparse.ArgumentParser(description="Reference integrity check (eight buckets).")
     ap.add_argument("--root", default=".", help="project root (default: cwd)")
     ap.add_argument("--json", action="store_true", help="emit JSON instead of a report")
     ap.add_argument("--kind", action="append", choices=SEVERITY_ORDER,
@@ -318,6 +373,9 @@ def main(argv=None) -> int:
     ap.add_argument("--ignore", default="",
                     help="regex; reference targets matching it are skipped "
                          "(e.g. '^state/|^worldbuilding/' to exempt described-but-absent paths)")
+    ap.add_argument("--ignore-file", default=DEFAULT_IGNORE_FILE,
+                    help=f"file of exemption patterns, one regex per line, '#' comments "
+                         f"allowed (default: {DEFAULT_IGNORE_FILE}; '' disables)")
     args = ap.parse_args(argv)
 
     root = Path(args.root)
@@ -325,7 +383,8 @@ def main(argv=None) -> int:
         print(f"error: root not a directory: {root}", file=sys.stderr)
         return 2
 
-    ignore_re = re.compile(args.ignore) if args.ignore else None
+    cli = [args.ignore.strip()] if args.ignore.strip() else []
+    ignore_re = build_ignore(root, cli, args.ignore_file)
     findings = scan(root, ignore_re)
 
     if args.kind:

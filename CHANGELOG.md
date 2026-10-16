@@ -5,6 +5,28 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.0] - 2026-10-17
+
+### Added
+- `.refsignore`: the reference-check exemption list, one regex per line with
+  the reason next to it. Read by default by `scripts/check_refs.py`, so a local
+  run, the pre-commit hook and CI judge the same tree instead of CI carrying a
+  private `--ignore` string that nothing else saw.
+- `check_refs.py --ignore-file` (default `.refsignore`, `''` disables) and a
+  new eighth bucket, `PRIVATE_MISSING`.
+
+### Changed
+- `PRIVATE_MISSING` splits "target does not exist" by source: from a release
+  file it stays `MISSING`, from a report or working note it becomes
+  `PRIVATE_MISSING` and is listed but never gated on. That split is what makes
+  the next item possible.
+- CI and pre-commit now gate on `NONRELEASE,MISSING` instead of `NONRELEASE`
+  alone. The release tree had 21 dangling references, all of them paths this
+  repository only *describes* — subproject state files, example manuscripts,
+  and the seed file's instructions written from a subproject's point of view.
+  Every one is now declared in `.refsignore` with its reason, and a new one
+  fails the build instead of being quietly filtered by a CI-only flag.
+
 ## [1.3.0] - 2026-10-17
 
 ### Added
@@ -282,7 +304,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-[Unreleased]: https://github.com/JohnSmithfan/github-novel-serialization-skill/compare/v1.3.0...HEAD
+[Unreleased]: https://github.com/JohnSmithfan/github-novel-serialization-skill/compare/v1.4.0...HEAD
+[1.4.0]: https://github.com/JohnSmithfan/github-novel-serialization-skill/compare/v1.3.0...v1.4.0
 [1.3.0]: https://github.com/JohnSmithfan/github-novel-serialization-skill/compare/v1.2.0...v1.3.0
 [1.2.0]: https://github.com/JohnSmithfan/github-novel-serialization-skill/compare/v1.1.2...v1.2.0
 [1.1.2]: https://github.com/JohnSmithfan/github-novel-serialization-skill/compare/v1.1.1...v1.1.2

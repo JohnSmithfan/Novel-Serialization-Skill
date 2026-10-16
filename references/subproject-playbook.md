@@ -201,13 +201,22 @@ shipped documentation must not point at something the reader cannot open.
 python scripts/check_refs.py --root .
 ```
 
-Buckets: `OK / LOCAL / TEMPLATE / BARE / PRIVATE_OK / NONRELEASE / MISSING`.
+Buckets: `OK / LOCAL / TEMPLATE / BARE / PRIVATE_OK / NONRELEASE / MISSING /
+PRIVATE_MISSING`.
 
 - `NONRELEASE` — a release file pointing into a private area. **Always a defect.**
-- `PRIVATE_OK` — a non-release file pointing into a private area. Allowed by the rule.
-- `MISSING` — triage per source: from a release file it needs fixing or an
-  explicit `--ignore`; from a report it is usually a described path that does not
-  exist in this repository.
+- `MISSING` — a release file pointing at something that does not exist.
+  **Always a defect**, unless the target is a path this repository only
+  describes (subproject state files, example manuscripts). Those exemptions
+  are declared in `.refsignore`, one regex per line, with the reason next to
+  each — the same file is read locally, in pre-commit and in CI.
+- `PRIVATE_OK` — a non-release file pointing into a private area. Allowed by
+  the rule.
+- `PRIVATE_MISSING` — a report or working note pointing at something absent.
+  Expected: those are written about another tree. Listed, never gated on.
+
+Gate on `NONRELEASE,MISSING`. A growing `.refsignore` is the signal that the
+convention is being described rather than followed.
 
 ---
 

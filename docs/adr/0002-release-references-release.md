@@ -42,3 +42,11 @@ working note can keep pointing at private material without tripping the rule.
   never resolve.
 - Template paths (`角色名.md`, `{name}.md`) are reported as `TEMPLATE` and not
   as failures; documentation legitimately describes shapes that do not exist.
+- Paths that are only ever *described* — subproject state files, example
+  manuscripts, paths written from a subproject's point of view — are exempted
+  in `.refsignore`, one regex per line with a reason. The same file is read by
+  a local run, by pre-commit and by CI, so the three cannot disagree.
+- A `MISSING` from a report or working note is bucketed as `PRIVATE_MISSING`
+  and never gated on: those files describe another tree. Only `MISSING` from a
+  release file fails the build. With that split, CI can gate on
+  `NONRELEASE,MISSING` and the release tree is genuinely clean.

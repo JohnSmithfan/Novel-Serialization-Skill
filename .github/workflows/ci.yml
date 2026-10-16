@@ -62,12 +62,10 @@ jobs:
           python-version: '3.11'
       - name: Check references (informational)
         run: |
-          python scripts/check_refs.py --root . \
-            --ignore '^state/|^worldbuilding/|^characters/|^notes-personal/|^issues/|^README_FOR_AI|^filepath$|^\.\./references/' \
-            --out refs-report.md
-      - name: Release files must not reference non-release files
+          python scripts/check_refs.py --root . --out refs-report.md
+      - name: Release files must not reference non-release or missing files
         run: |
-          python scripts/check_refs.py --root . --fail-on NONRELEASE
+          python scripts/check_refs.py --root . --fail-on NONRELEASE,MISSING
       - name: Upload report
         if: always()
         uses: actions/upload-artifact@v4
@@ -142,6 +140,7 @@ jobs:
                    CONTRIBUTING.md CODE_OF_CONDUCT.md SECURITY.md SUPPORT.md \
                    GOVERNANCE.md CHANGELOG.md SUBPROJECTS.md CITATION.cff \
                    security.txt pyproject.toml requirements-dev.txt Makefile \
+                   .refsignore \
                    docs/README.md docs/adr/README.md tests/conftest.py \
                    .github/CODEOWNERS .github/PULL_REQUEST_TEMPLATE.md \
                    .github/ISSUE_TEMPLATE/config.yml; do

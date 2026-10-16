@@ -99,6 +99,43 @@ def test_ignore_pattern_suppresses_matches(tree):
     assert not cr.scan(tree.root, re.compile(r"^state/"))["MISSING"]
 
 
+def test_ignore_file_suppresses_matches(tree):
+    # The exemption list must live in a file the local run, pre-commit and CI
+    # all read, so that the three cannot disagree.
+    tree(".refsignore", "# comment\n\n^state/\n")
+    tree("a.md", "see [x](state/timeline.md)\n")
+    assert not cr.scan(tree.root, cr.build_ignore(tree.root, [], ".refsignore"))["MISSING"]
+    assert cr.scan(tree.root)["MISSING"]
+    assert cr.scan(tree.root, cr.build_ignore(tree.root, [], ""))["MISSING"], \
+        "an empty --ignore-file disables the exemption"
+
+
+def test_missing_from_a_release_file_is_gated(tree):
+    tree("a.md", "see [gone](gone.md)\n")
+    f = cr.scan(tree.root)
+    assert f["MISSING"] and not f["PRIVATE_MISSING"]
+    assert cr.main(["--root", str(tree.root), "--fail-on", "MISSING"]) == 1
+
+
+def test_missing_from_a_report_is_not_gated(tree):
+    tree("notes-personal/r.md", "see [timeline](../worldbuilding/时间线.md)\n")
+    f = cr.scan(tree.root)
+    assert f["PRIVATE_MISSING"] and not f["MISSING"]
+    assert cr.main(["--root", str(tree.root), "--fail-on", "MISSING"]) == 0
+
+
+def test_ignore_file_patterns_are_valid(tree):
+    # The patterns are written by hand; a typo must fail loudly, not silently
+    # disable every exemption.
+    tree(".refsignore", "^state/(\n")
+    try:
+        cr.build_ignore(tree.root, [], ".refsignore")
+    except SystemExit:
+        pass
+    else:
+        raise AssertionError("a malformed pattern should raise")
+
+
 def test_main_fail_on_returns_one(tree):
     tree("a.md", "see [note](notes-personal/x.md)\n")
     tree("notes-personal/x.md", "x\n")
