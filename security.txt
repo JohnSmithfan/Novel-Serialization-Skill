@@ -8,7 +8,6 @@
 # SECURITY.md changes; CI does not check it, so it is on the maintainer.
 
 Contact: https://github.com/JohnSmithfan/github-novel-serialization-skill/security/advisories/new
-Contact: mailto:security@example.com
 Expires: 2027-10-16T00:00:00.000Z
 Preferred-Languages: zh, en
 Canonical: https://github.com/JohnSmithfan/github-novel-serialization-skill/blob/main/security.txt

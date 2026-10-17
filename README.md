@@ -9,11 +9,30 @@
 
 ---
 
+## Table of Contents
+
+- [Overview](#overview)
+- [Architecture](#architecture)
+- [Quick Start](#quick-start)
+- [Directory Structure](#directory-structure)
+- [Development](#development)
+- [Modules](#modules)
+- [Subprojects](#subprojects)
+- [Installation](#installation)
+- [Usage Examples](#usage-examples)
+- [Contributing](#contributing)
+- [Credits](#credits)
+- [License](#license)
+
+---
+
 ## Overview
 
 **github-novel-serialization-skill** is a production-grade, modular Skill that orchestrates AI-assisted novel writing and GitHub-based serialization. It covers the full creative lifecycle: **world-building -> character design -> chapter drafting -> continuity verification -> GitHub publishing**. Built on harness-engineering principles (constraint-before-generation, structured memory, verification gates, modular decomposition, and feedback loops), this Skill transforms a raw LLM into a reliable, stateful, multi-session novel-writing agent.
 
 Every module is independently usable, composable, and under 500 lines — designed for compatibility with any LLM-backed coding agent (Claude Code, GitHub Copilot, Cursor, etc.).
+
+> **Note:** This Skill project is a harness-engineered system, not just a collection of prompts. Every file exists to constrain, guide, and verify — the goal is deterministic quality, not lucky outputs.
 
 ---
 
@@ -363,6 +382,14 @@ Contributions are welcome! Please read our [Contributing Guide](CONTRIBUTING.md)
 
 ---
 
+## Credits
+
+- Built with principles from Harness Engineering
+- Inspired by the [Keep a Changelog](https://keepachangelog.com/) and [Semantic Versioning](https://semver.org/) standards
+- Community-driven project — built by and for novelists, writers, and AI enthusiasts
+
+---
+
 ## License
 
 This project uses a **dual-licensing** model:
@@ -373,15 +400,3 @@ This project uses a **dual-licensing** model:
 | **Generated Novel Content** (chapters, character sheets, world-building docs) | [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)](LICENSES/CC-BY-NC-SA-4.0.txt) |
 
 See the [LICENSE](LICENSE) file for full GPL-3.0 terms and the [LICENSES/CC-BY-NC-SA-4.0.txt](LICENSES/CC-BY-NC-SA-4.0.txt) file for full CC BY-NC-SA 4.0 terms.
-
----
-
-## Credits
-
-- Built with principles from Harness Engineering
-- Inspired by the [Keep a Changelog](https://keepachangelog.com/) and [Semantic Versioning](https://semver.org/) standards
-- Community-driven project — built by and for novelists, writers, and AI enthusiasts
-
----
-
-> **Note**: This Skill project is a harness-engineered system, not just a collection of prompts. Every file exists to constrain, guide, and verify — the goal is deterministic quality, not lucky outputs.

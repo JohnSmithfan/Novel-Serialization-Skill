@@ -78,8 +78,10 @@ representative at an online or offline event.
 ## Enforcement
 
 Instances of abusive, harassing, or otherwise unacceptable behavior may be
-reported to the project maintainers of **GitHub Novel Serialization Skill** at
-[INSERT_CONTACT_EMAIL].
+reported to the project maintainer of **GitHub Novel Serialization Skill**
+privately, through the repository's
+[Security Advisory form](https://github.com/JohnSmithfan/github-novel-serialization-skill/security/advisories/new)
+(GitHub's private reporting channel to the maintainer).
 
 All complaints will be reviewed and investigated promptly and fairly.
 

@@ -2,8 +2,6 @@ name: Feature Request
 description: Suggest an idea for this project
 title: "[Feature]: "
 labels: ["enhancement"]
-assignees:
-  - octocat
 body:
   - type: markdown
     attributes:

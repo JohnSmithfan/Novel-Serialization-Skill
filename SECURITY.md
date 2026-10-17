@@ -34,13 +34,12 @@ this could expose users to risk before a fix is available.
 
 ### 2. Report via private channel
 
-Please report security vulnerabilities by emailing us at:
+Report privately through the repository's
+[Security Advisory form](https://github.com/JohnSmithfan/github-novel-serialization-skill/security/advisories/new) —
+GitHub's private reporting channel to the maintainer. **Never** open a public
+issue for a vulnerability.
 
-**[INSERT_SECURITY_EMAIL]**
-
-Subject line: `[SECURITY] <brief description>`
-
-Alternatively, you can use GitHub's [Security Advisory](https://docs.github.com/en/code-security/security-advisories) feature to report vulnerabilities privately.
+Title the report `[SECURITY] <brief description>`.
 
 ### 3. Include the following information
 
