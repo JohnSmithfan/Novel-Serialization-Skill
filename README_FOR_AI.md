@@ -1,4 +1,4 @@
-# README FOR AI.md
+# README_FOR_AI.md
 
 > **Purpose**: This document is a meta-instruction set. It directs an AI agent to generate a complete, production-grade **GitHub Novel Serialization Skill** project. Every section below is a mandatory generation directive — follow them precisely.
 >
