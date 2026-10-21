@@ -35,7 +35,7 @@ SCRIPTS = ROOT / "scripts"
 
 # Files exempt from the 500-line budget. Mirrors .pre-commit-config.yaml and
 # .github/workflows/ci.yml — change all three together.
-LINE_BUDGET_ALLOW = "README FOR AI.md,CHANGELOG.md,LICENSE,LICENSES/CC-BY-NC-SA-4.0.txt"
+LINE_BUDGET_ALLOW = "README_FOR_AI.md,CHANGELOG.md,LICENSE,LICENSES/CC-BY-NC-SA-4.0.txt"
 
 
 def run(cmd: list, label: str) -> int:

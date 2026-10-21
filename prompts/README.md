@@ -2,7 +2,7 @@
 
 > **Purpose**: This file is the usage guide for the prompt templates in this directory. It explains the dual-mode design, how to use each prompt, how to customize the output language, and how to combine prompts for complex workflows.
 >
-> **Authoritative Source**: For the authoritative declaration on the `{{OUTPUT_LANGUAGE}}` variable and all prompt design specifications, see [README FOR AI.md](../README%20FOR%20AI.md) Section 0.3 (Runtime Output Language), Section 4.1 (Design Philosophy), Section 4.2 (prompts/README.md specifications), Section 4.3 (01-implement-method.md) and Section 4.4 (02-robustness-checks.md).
+> **Authoritative Source**: For the authoritative declaration on the `{{OUTPUT_LANGUAGE}}` variable and all prompt design specifications, see [README_FOR_AI.md](../README_FOR_AI.md) Section 0.3 (Runtime Output Language), Section 4.1 (Design Philosophy), Section 4.2 (prompts/README.md specifications), Section 4.3 (01-implement-method.md) and Section 4.4 (02-robustness-checks.md).
 >
 > **License**: This file is part of the Skill infrastructure and is licensed under GNU General Public License v3.0 (GPL-3.0).
 
@@ -20,7 +20,7 @@ github-novel-serialization-skill/
     └── 02-robustness-checks.md    ← Validation & quality-check prompt
 ```
 
-> **Note**: This shows a simplified view of the `prompts/` directory. See Section 1 of [README FOR AI.md](../README%20FOR%20AI.md) for the full project structure.
+> **Note**: This shows a simplified view of the `prompts/` directory. See Section 1 of [README_FOR_AI.md](../README_FOR_AI.md) for the full project structure.
 
 ---
 
@@ -43,7 +43,7 @@ This project employs a **dual-mode** architecture for its prompt system:
 
 | Mode | Description | Use Case |
 |------|-------------|----------|
-| **Agent-Assisted** | These prompt files define methodologies that the Skill's internal modules (in `modules/`) can reference to orchestrate structured workflows; note that the prompt files themselves are NOT for direct agent auto-invocation (see Section 4.1 of README FOR AI.md for design philosophy) | Guided AI-assisted workflows where a human uses these prompts to direct an agent's output |
+| **Agent-Assisted** | These prompt files define methodologies that the Skill's internal modules (in `modules/`) can reference to orchestrate structured workflows; note that the prompt files themselves are NOT for direct agent auto-invocation (see Section 4.1 of README_FOR_AI.md for design philosophy) | Guided AI-assisted workflows where a human uses these prompts to direct an agent's output |
 | **Human Copy-Paste** | These prompt files can be copied into any AI chat interface for manual use | Ad-hoc writing, exploration, learning |
 
 **Key Principle**: These prompt files are deliberately written to be **tool-agnostic**. They work identically whether you paste them into ChatGPT, Claude, Gemini, or any other LLM interface. The prompts use clear role assignments, structured output specifications, and variable placeholders to ensure consistent results across platforms.
@@ -94,7 +94,7 @@ Each prompt contains **variable placeholders** (marked with `{{VARIABLE_NAME}}`)
 
 ### 5.1 The `{{OUTPUT_LANGUAGE}}` Variable
 
-All prompt templates include an **Output Language Instruction** block that controls the language of generated novel content. This variable is governed by the **AUTHORITATIVE DECLARATION** in [README FOR AI.md Section 0.3](../README%20FOR%20AI.md) (Runtime Output Language (Single Authority)), which establishes `{{OUTPUT_LANGUAGE}}` as the single source of truth for output language across the entire Skill.
+All prompt templates include an **Output Language Instruction** block that controls the language of generated novel content. This variable is governed by the **AUTHORITATIVE DECLARATION** in [README_FOR_AI.md Section 0.3](../README_FOR_AI.md) (Runtime Output Language (Single Authority)), which establishes `{{OUTPUT_LANGUAGE}}` as the single source of truth for output language across the entire Skill.
 
 ```
 ## Output Language Instruction
@@ -207,4 +207,4 @@ Each prompt file follows a consistent structure to ensure reliable output:
 
 ---
 
-*For detailed specifications on prompt design, integration, and the authoritative declaration on output language, see the [README FOR AI.md](../README%20FOR%20AI.md) seed file.*
+*For detailed specifications on prompt design, integration, and the authoritative declaration on output language, see the [README_FOR_AI.md](../README_FOR_AI.md) seed file.*

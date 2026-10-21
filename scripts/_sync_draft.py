@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 """把 chapters/ 中指定章节正文同步回 notes-personal/正文草稿.md"""
-import re, sys, glob, os
+import re
+import sys
+import glob
+import os
 sys.stdout.reconfigure(encoding='utf-8')
 
 DRAFT = 'notes-personal/正文草稿.md'
@@ -18,16 +21,19 @@ lines = t.split('\n')
 for n in NUMS:
     key = str(int(n))
     if key not in src:
-        print('缺少章节文件', n); continue
+        print('缺少章节文件', n)
+        continue
     body = open(src[key], encoding='utf-8').read().strip('\n')
     pat = re.compile(r'^## 第0*' + str(int(n)) + r'章')
-    start = next((i for i, l in enumerate(lines) if pat.match(l)), None)
+    start = next((i for i, ln in enumerate(lines) if pat.match(ln)), None)
     if start is None:
-        print('草稿中未找到 第%s章' % n); continue
+        print('草稿中未找到 第%s章' % n)
+        continue
     end = len(lines)
     for j in range(start + 1, len(lines)):
         if re.match(r'^## 第\d+章', lines[j]) or re.match(r'^# ', lines[j]):
-            end = j; break
+            end = j
+            break
     lines[start:end] = body.split('\n') + ['']
     print('同步 第%s章 -> 草稿' % n)
 
@@ -38,5 +44,6 @@ d = set(re.findall(r'^## 第(\d+)章 (.+)$', '\n'.join(lines), re.M))
 c = set()
 for k, p in src.items():
     m = re.search(r'^## 第(\d+)章 (.+)$', open(p, encoding='utf-8').read(), re.M)
-    if m: c.add((m.group(1), m.group(2)))
+    if m:
+        c.add((m.group(1), m.group(2)))
 print('草稿章数', len(d), 'chapters 章数', len(c), '标题差异', len(d ^ c))

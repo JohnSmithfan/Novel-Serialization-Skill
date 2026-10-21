@@ -1,7 +1,7 @@
 ---
-name: novel-publishing-workflow
+name: novel-worldbuilding
 description: >
-  Manages Git-based publishing pipeline for serialized chapters including tagging, release notes, and automated verification.
+  Generates and maintains world-building documents for novel serialization projects. Covers magic systems, geography, politics, technology, history, and culture design.
 license: GPL-3.0
 novel_content_license: CC-BY-NC-SA-4.0
 license_note: >
@@ -16,9 +16,9 @@ metadata:
 
 ## Overview
 
-Manages Git-based publishing pipeline for serialized chapters including tagging, release notes, and automated verification.
+Generates and maintains world-building documents for novel serialization projects. Covers magic systems, geography, politics, technology, history, and culture design.
 
-**Triggers:** "publish chapter", "create release", "tag version", "release novel", "publish release"
+**Triggers:** "build a world", "create setting", "design magic system", "design political system", "create culture"
 
 ## Output Language
 
@@ -30,15 +30,15 @@ All generated novel content MUST be output in the language specified by the user
 - **Scope:** Applies to all generated narrative content, NOT to Skill infrastructure files
 - **Infrastructure files** (SKILL.md, references/, module definitions) remain in English to ensure cross-tool compatibility
 
-See [Section 0.3 of README FOR AI](../../README%20FOR%20AI.md#03-runtime-output-language-single-authority) for the authoritative declaration.
+See [Section 0.3 of README_FOR_AI.md](../../README_FOR_AI.md#03-runtime-output-language-single-authority) for the authoritative declaration.
 
 ## Quick Start
 
-1. Load the publishing-workflow sub-skill and review the reference templates in method-patterns-publishing.md
-2. Run continuity-check module to verify all content is publication-ready
-3. Update CHANGELOG.md with release entries following Keep a Changelog format
-4. Create Git tag using semantic versioning format (v{major}.{minor}.{patch})
-5. Generate release notes and push to repository
+1. Load the worldbuilding sub-skill and review the reference templates in method-patterns-worldbuilding.md
+2. Define the core world parameters (genre, era, technology level, tone)
+3. Build world components iteratively: magic system -> geography -> politics -> culture -> history
+4. Save world-building documents following the naming conventions
+5. Update world state in the continuity-tracker module for cross-module consistency
 
 ## Related Modules
 
@@ -46,17 +46,17 @@ This module is a peer of the following modules. It may hand off to them, but it 
 
 | Skill | Purpose | Path |
 |-------|---------|------|
-| novel-worldbuilding | Generates and maintains world-building documents for novel serialization projects. Covers magic systems, geography, politics, technology, history, and culture design. | [SKILL.md](../worldbuilding/SKILL.md) |
-| novel-character-design | Generates and maintains character sheets including identity, psychology, arc, relationships, and voice profiles for novel characters. | [SKILL.md](../character-design/SKILL.md) |
-| novel-chapter-writing | Drafts chapters following established world-building, character designs, and style guidelines while maintaining continuity with previous chapters. | [SKILL.md](../chapter-writing/SKILL.md) |
-| novel-continuity-check | Verifies consistency across all chapters and state files, identifying plot holes, timeline errors, and character inconsistency. | [SKILL.md](../continuity-check/SKILL.md) |
-| novel-continuity-tracker | Maintains persistent state files including timeline, character states, location states, and unresolved thread ledger for cross-session state management. | [SKILL.md](../continuity-tracker/SKILL.md) |
+| novel-character-design | Generates and maintains character sheets including identity, psychology, arc, relationships, and voice profiles for novel characters. | [MODULE.md](../character-design/MODULE.md) |
+| novel-chapter-writing | Drafts chapters following established world-building, character designs, and style guidelines while maintaining continuity with previous chapters. | [MODULE.md](../chapter-writing/MODULE.md) |
+| novel-continuity-check | Verifies consistency across all chapters and state files, identifying plot holes, timeline errors, and character inconsistency. | [MODULE.md](../continuity-check/MODULE.md) |
+| novel-publishing-workflow | Manages Git-based publishing pipeline for serialized chapters including tagging, release notes, and automated verification. | [MODULE.md](../publishing-workflow/MODULE.md) |
+| novel-continuity-tracker | Maintains persistent state files including timeline, character states, location states, and unresolved thread ledger for cross-session state management. | [MODULE.md](../continuity-tracker/MODULE.md) |
 
 ## References
 
 ### Primary Template
 
-- [Method Patterns](../../references/method-patterns-publishing.md) - Master template file with structured patterns and guidelines
+- [Method Patterns](../../references/method-patterns-worldbuilding.md) - Master template file with structured patterns and guidelines
 
 ### Supporting Resources
 
@@ -65,14 +65,13 @@ This module is a peer of the following modules. It may hand off to them, but it 
 - [Implement Method Prompt](../../prompts/01-implement-method.md) - Core implementation prompt
 - [Robustness Checks Prompt](../../prompts/02-robustness-checks.md) - Validation and quality-check prompt
 
-
 ## Examples
 
-- [CHANGELOG.md](../../CHANGELOG.md) - Live example of Keep a Changelog format in this project. For release note, git tag, and chapter naming templates, see [method-patterns-publishing.md](../../references/method-patterns-publishing.md).
+- [example-worldbuilding.md](../../references/examples/example-worldbuilding.md) - Worked example demonstrating this module's patterns
 
 ## Quick Reference: File Conventions
 
-- **Naming:** Git tags follow format: v{major}.{minor}.{patch} or chapter-{number}. Release notes follow Keep a Changelog format.
+- **Naming:** World-building documents use kebab-case filenames under `worldbuilding/` — `worldbuilding/{domain}.md` (e.g., `worldbuilding/magic-system.md`), per the root SKILL.md File Conventions. State files are owned by the continuity-tracker module.
 - **Encoding:** UTF-8
 - **Line endings:** LF (Unix-style)
 - **Max file size:** 500 lines (split if exceeded)
@@ -81,13 +80,12 @@ This module is a peer of the following modules. It may hand off to them, but it 
 
 Before considering this module's output complete, verify:
 
-1. [ ] All chapter files follow naming convention (ch-{number}-{title}.md)
-2. [ ] License headers present in all generated novel files
-3. [ ] Continuity check passed before release
-4. [ ] CHANGELOG.md updated with release entries
-5. [ ] Git tag format is valid (semantic versioning)
-6. [ ] Release notes include all notable changes
-7. [ ] No broken internal links in published content
+1. [ ] Magic system rules are internally consistent (no contradictions)
+2. [ ] Geography maps to political boundaries logically
+3. [ ] Technology level is consistent across cultures
+4. [ ] Historical timeline has no anachronisms
+5. [ ] Cultural descriptions avoid real-world stereotypes
+6. [ ] All named locations have at least one defining feature
 
 ## Cross-References
 
@@ -118,11 +116,11 @@ Before considering this module's output complete, verify:
 
 ### Scope Boundaries
 
-Scope: Manages Git-based publishing pipeline for serialized chapters including tagging, release notes, and automated verification.
+Scope: Generates and maintains world-building documents for novel serialization projects. Covers magic systems, geography, politics, technology, history, and culture design.
 
 This module does NOT handle:
-- novel-worldbuilding: Generates and maintains world-building documents for novel serialization projects. Covers magic systems, geography, politics, technology, history, and culture design.
 - novel-character-design: Generates and maintains character sheets including identity, psychology, arc, relationships, and voice profiles for novel characters.
 - novel-chapter-writing: Drafts chapters following established world-building, character designs, and style guidelines while maintaining continuity with previous chapters.
 - novel-continuity-check: Verifies consistency across all chapters and state files, identifying plot holes, timeline errors, and character inconsistency.
+- novel-publishing-workflow: Manages Git-based publishing pipeline for serialized chapters including tagging, release notes, and automated verification.
 - novel-continuity-tracker: Maintains persistent state files including timeline, character states, location states, and unresolved thread ledger for cross-session state management.

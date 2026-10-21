@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """列出待改写的命中句（Humanizer 整改工作清单）"""
-import sys, re, argparse
+import sys
+import re
+import argparse
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))

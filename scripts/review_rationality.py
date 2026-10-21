@@ -38,7 +38,7 @@ def find_outline(root):
     """自动探测含 `## 第N章` 的大纲/设定文件"""
     for p in sorted(glob.glob(os.path.join(root, 'worldbuilding', '**', '*.md'), recursive=True)):
         t = open(p, encoding='utf-8').read()
-        if len([l for l in t.split('\n') if L.PAT_HEAD_CN.match(l)]) >= 3:
+        if len([ln for ln in t.split('\n') if L.PAT_HEAD_CN.match(ln)]) >= 3:
             return p
     return ''
 
@@ -60,7 +60,7 @@ def outline_grams(path, num):
     if num not in blocks:
         return set()
     text = re.sub(r'【[^】]*】', '', blocks[num][1])
-    text = '\n'.join(l for l in text.split('\n') if not l.strip().startswith('【'))
+    text = '\n'.join(ln for ln in text.split('\n') if not ln.strip().startswith('【'))
     return bigrams(text)
 
 
@@ -158,7 +158,6 @@ def audit(item, cfg, ctx):
 def global_checks(items, cfg, ctx):
     """伏笔回收"""
     issues = []
-    corpus = ctx['corpus']
     for kw, start in ctx['threads']:
         if not start:
             continue

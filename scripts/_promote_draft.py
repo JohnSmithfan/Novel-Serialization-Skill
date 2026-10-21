@@ -15,7 +15,14 @@
 说明：脚本存放于技能仓库 scripts/（多子项目共用），项目根默认取当前工作目录，
       须为含 chapters/ 与 notes-personal/ 的子项目根目录。
 """
-import re, sys, os, glob, subprocess, argparse, datetime, shutil
+import re
+import sys
+import os
+import glob
+import subprocess
+import argparse
+import datetime
+import shutil
 
 sys.stdout.reconfigure(encoding='utf-8')
 
@@ -28,7 +35,7 @@ DRAFT_DEFAULT = 'notes-personal/正文草稿.md'
 
 def cn(t):
     return len(re.findall(r'[\u4e00-\u9fff]',
-        '\n'.join(l for l in t.split('\n') if not l.startswith('>') and not l.startswith('##'))))
+        '\n'.join(ln for ln in t.split('\n') if not ln.startswith('>') and not ln.startswith('##'))))
 
 
 def chapter_index():
@@ -43,12 +50,12 @@ def chapter_index():
 def blocks(draft_text):
     """返回 {章号: (标题, 正文块文本)}"""
     lines = draft_text.split('\n')
-    heads = [(i, l) for i, l in enumerate(lines) if re.match(r'^## 第\d+章', l)]
+    heads = [(i, ln) for i, ln in enumerate(lines) if re.match(r'^## 第\d+章', ln)]
     out = {}
-    for k, (i, l) in enumerate(heads):
+    for k, (i, ln) in enumerate(heads):
         end = heads[k + 1][0] if k + 1 < len(heads) else len(lines)
-        m = re.match(r'^## 第(\d+)章 (.+)$', l)
-        out[str(int(m.group(1)))] = (l, '\n'.join(lines[i:end]).strip('\n'))
+        m = re.match(r'^## 第(\d+)章 (.+)$', ln)
+        out[str(int(m.group(1)))] = (ln, '\n'.join(lines[i:end]).strip('\n'))
     return out
 
 
@@ -80,7 +87,8 @@ def main():
     print('项目根：', root)
 
     if not os.path.exists(a.draft):
-        print('草稿不存在：', a.draft); return 1
+        print('草稿不存在：', a.draft)
+        return 1
     dtext = open(a.draft, encoding='utf-8').read()
     dblocks = blocks(dtext)
     idx = chapter_index()
@@ -92,30 +100,36 @@ def main():
         verdict, _ = humanizer_pass(a.draft)
         print('humanizer 自检（草稿）:', verdict)
         if verdict == 'FAIL' and not a.force:
-            print('草稿未通过自检，拒绝同步定稿。改完再跑，或用 --force（不推荐）。'); return 2
+            print('草稿未通过自检，拒绝同步定稿。改完再跑，或用 --force（不推荐）。')
+            return 2
 
     today = datetime.date.today().isoformat()
     snap_dir = os.path.join('_trash', '定稿同步前_%s' % today)
     todo = []
     for n in nums:
         if n not in dblocks:
-            print('草稿中无 第%s章' % n); continue
+            print('草稿中无 第%s章' % n)
+            continue
         if n not in idx:
-            print('chapters/ 中无 第%s章' % n); continue
+            print('chapters/ 中无 第%s章' % n)
+            continue
         cur = open(idx[n], encoding='utf-8').read()
         new = dblocks[n][1] + '\n'
         if cur.strip('\n') == new.strip('\n'):
-            print('第%s章 无差异，跳过' % n); continue
+            print('第%s章 无差异，跳过' % n)
+            continue
         todo.append((n, idx[n], cur, new))
 
     if not todo:
-        print('没有需要同步的章节。'); return 0
+        print('没有需要同步的章节。')
+        return 0
 
     for n, p, cur, new in todo:
         print('第%s章 %s：%d -> %d 字' % (n, os.path.basename(p), cn(cur), cn(new)))
 
     if a.dry_run:
-        print('--dry-run：未写入'); return 0
+        print('--dry-run：未写入')
+        return 0
 
     os.makedirs(snap_dir, exist_ok=True)
     log = []
@@ -130,7 +144,8 @@ def main():
     ctitles = {}
     for k, p in idx.items():
         m = re.search(r'^## 第(\d+)章 (.+)$', open(p, encoding='utf-8').read(), re.M)
-        if m: ctitles[str(int(m.group(1)))] = '## 第%s章 %s' % (int(m.group(1)), m.group(2))
+        if m:
+            ctitles[str(int(m.group(1)))] = '## 第%s章 %s' % (int(m.group(1)), m.group(2))
     diff = [k for k in dtitles if k in ctitles and dtitles[k] != ctitles[k]]
     print('章标题差异：', diff or '0（一致）')
 

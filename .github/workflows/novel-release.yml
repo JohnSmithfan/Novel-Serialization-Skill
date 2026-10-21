@@ -93,10 +93,10 @@ jobs:
           # Spec Section 6: no chapter publishes without passing checks. A missing module
           # used to print a WARNING and let the release continue, so it now fails the gate.
           cont_status=0
-          if [ -f modules/continuity-check/SKILL.md ]; then
+          if [ -f modules/continuity-check/MODULE.md ]; then
             echo "Continuity check module found."
           else
-            echo "ERROR: Continuity check module not found (modules/continuity-check/SKILL.md)"
+            echo "ERROR: Continuity check module not found (modules/continuity-check/MODULE.md)"
             cont_status=1
           fi
           # Novel content must be accompanied by the state files that make continuity

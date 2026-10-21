@@ -20,7 +20,7 @@
 > **File Naming**: This file follows the naming convention `NN-description.md` where `NN` is
 > a zero-padded sequence number, placed in the `prompts/` directory.
 > 
-> **Specification**: README FOR AI.md, Section 4.3
+> **Specification**: README_FOR_AI.md, Section 4.3
 
 ---
 

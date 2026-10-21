@@ -34,7 +34,7 @@ Usage
     python scripts/scan_hygiene.py --root .
     python scripts/scan_hygiene.py --root . --fix           # rewrite CRLF -> LF
     python scripts/scan_hygiene.py --root . --max-lines 500 \
-        --allow "README FOR AI.md,CHANGELOG.md,LICENSE"
+        --allow "README_FOR_AI.md,CHANGELOG.md,LICENSE"
     python scripts/scan_hygiene.py --root . --json
     python scripts/scan_hygiene.py --root . --fail-on crlf,junk,mojibake
 
@@ -137,8 +137,9 @@ def scan(root: Path, max_lines: int, allow: set):
             findings["empty"].append({"file": rel, "detail": "0 bytes"})
             continue
 
-        if b"\r\n" in raw:
-            findings["crlf"].append({"file": rel, "detail": f"{raw.count(b'\r\n')} CRLF"})
+        crlf_count = raw.count(b"\r\n")
+        if crlf_count:
+            findings["crlf"].append({"file": rel, "detail": f"{crlf_count} CRLF"})
 
         try:
             text = raw.decode("utf-8")
@@ -172,7 +173,7 @@ def fix_crlf(root: Path, items) -> int:
 
 
 def render(findings, root: Path, max_lines: int) -> str:
-    lines = [f"# scan_hygiene.py — file hygiene report", "",
+    lines = ["# scan_hygiene.py — file hygiene report", "",
              f"- root: `{root}`", f"- line budget: {max_lines}", "",
              "| Check | Count | Meaning |", "|---|---|---|"]
     for k in CHECK_ORDER:

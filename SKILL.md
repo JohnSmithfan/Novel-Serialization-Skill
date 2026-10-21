@@ -27,7 +27,7 @@ This Skill orchestrates AI-assisted novel writing and GitHub-based serialization
 
 ## Output Language
 
-All generated novel content MUST be output in the language specified by the user via the `{{OUTPUT_LANGUAGE}}` variable (default: English). Infrastructure and metadata files remain in English to ensure cross-tool compatibility. See [README FOR AI.md — Section 0.3](README%20FOR%20AI.md#03-runtime-output-language-single-authority) for the authoritative declaration.
+All generated novel content MUST be output in the language specified by the user via the `{{OUTPUT_LANGUAGE}}` variable (default: English). Infrastructure and metadata files remain in English to ensure cross-tool compatibility. See [README_FOR_AI.md — Section 0.3](README_FOR_AI.md#03-runtime-output-language-single-authority) for the authoritative declaration.
 
 ## Quick Start
 
@@ -39,14 +39,16 @@ All generated novel content MUST be output in the language specified by the user
 
 ## Module Index
 
+Module contracts are named `MODULE.md`, not `SKILL.md`, so that skill loaders scanning subdirectories do not register each module as a standalone skill. They remain independently loadable when referenced explicitly.
+
 | Module | Purpose | Path |
 |--------|---------|------|
-| World-Building | Generate and maintain world-building documents (magic systems, geography, politics, culture) | [modules/worldbuilding/SKILL.md](modules/worldbuilding/SKILL.md) |
-| Character Design | Generate and maintain character sheets (identity, psychology, arc, relationships, voice) | [modules/character-design/SKILL.md](modules/character-design/SKILL.md) |
-| Chapter Writing | Draft chapters following established style and continuity rules | [modules/chapter-writing/SKILL.md](modules/chapter-writing/SKILL.md) |
-| Continuity Check | Verify consistency across all chapters and state files | [modules/continuity-check/SKILL.md](modules/continuity-check/SKILL.md) |
-| Publishing Workflow | Manage Git-based publishing pipeline for serialized chapters | [modules/publishing-workflow/SKILL.md](modules/publishing-workflow/SKILL.md) |
-| Continuity Tracker | Maintain persistent state files (timeline, character states, thread ledger) | [modules/continuity-tracker/SKILL.md](modules/continuity-tracker/SKILL.md) |
+| World-Building | Generate and maintain world-building documents (magic systems, geography, politics, culture) | [modules/worldbuilding/MODULE.md](modules/worldbuilding/MODULE.md) |
+| Character Design | Generate and maintain character sheets (identity, psychology, arc, relationships, voice) | [modules/character-design/MODULE.md](modules/character-design/MODULE.md) |
+| Chapter Writing | Draft chapters following established style and continuity rules | [modules/chapter-writing/MODULE.md](modules/chapter-writing/MODULE.md) |
+| Continuity Check | Verify consistency across all chapters and state files | [modules/continuity-check/MODULE.md](modules/continuity-check/MODULE.md) |
+| Publishing Workflow | Manage Git-based publishing pipeline for serialized chapters | [modules/publishing-workflow/MODULE.md](modules/publishing-workflow/MODULE.md) |
+| Continuity Tracker | Maintain persistent state files (timeline, character states, thread ledger) | [modules/continuity-tracker/MODULE.md](modules/continuity-tracker/MODULE.md) |
 
 ## Workflow Pipeline
 
@@ -77,7 +79,7 @@ Publish       →  Git tag + GitHub Release (modules/publishing-workflow/)
 - **Character sheets**: `characters/{name}.md`
 - **State files**: `state/{type}.md` (timeline, character-states, thread-ledger, location-states)
 - **All Markdown files**: UTF-8, LF line endings, 2-space indentation
-- **YAML frontmatter**: Required on all SKILL.md files and on every chapter file (`method-patterns-publishing.md` Section 3). Optional on other novel content files (world-building docs, character sheets), where the CC license header serves as metadata. Where frontmatter and the CC header coexist, frontmatter goes first at byte 0.
+- **YAML frontmatter**: Required on the root `SKILL.md`, on every `modules/*/MODULE.md`, and on every chapter file (`method-patterns-publishing.md` Section 3). Optional on other novel content files (world-building docs, character sheets), where the CC license header serves as metadata. Where frontmatter and the CC header coexist, frontmatter goes first at byte 0.
 
 ## Quick Reference: Git Conventions
 
@@ -133,7 +135,7 @@ Checklist — all must also pass before publish:
 - [ ] **License compliance** — generated content includes the CC BY-NC-SA 4.0 header
 - [ ] **File naming** — chapter file follows `ch-{number}-{title}.md`
 - [ ] **State updated** — timeline, character states, and thread ledger are current
-- [ ] **Line count compliance** — no file exceeds 500 lines (see [§8.1](README%20FOR%20AI.md#81-hard-limit))
+- [ ] **Line count compliance** — no file exceeds 500 lines (see [§8.1](README_FOR_AI.md#81-hard-limit))
 
 ## Cross-References
 
@@ -149,7 +151,7 @@ Checklist — all must also pass before publish:
 
 ## Constraints & Boundaries
 
-1. **SKILL.md is index + quick-reference ONLY** — no code templates, no long-form methodology. All templates live in `references/`.
+1. **The root `SKILL.md` is index + quick-reference ONLY** — no code templates, no long-form methodology. All templates live in `references/`.
 2. **No file exceeds 500 lines** — split into sub-modules when approaching the limit (see `references/method-patterns.md` split protocol). Ledgers, logs and generated seed files are exempt **but must be declared** via `scan_hygiene.py --allow`. See `references/subproject-playbook.md` Section 10.
 3. **`prompts/` folder is DUAL-MODE** — files are standalone copy-paste templates for humans, NOT for agent auto-invocation.
 4. **Harness Engineering compliance** — constraint-before-generation, structured memory, verification gates, modular decomposition, and feedback loops are mandatory.

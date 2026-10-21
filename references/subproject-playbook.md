@@ -230,7 +230,7 @@ pretending otherwise makes the whole rule ignorable:
 |---|---|---|
 | Ledger / log | `CHANGELOG.md`, `progress.md`, decision ledger | exempt — chronological append, never read end-to-end |
 | Reference table | setting compendia | split by domain; if one domain is genuinely 3000 lines, split by section and link |
-| Generated / seed | `README FOR AI.md` | exempt, but never edited by hand |
+| Generated / seed | `README_FOR_AI.md` | exempt, but never edited by hand |
 
 Declare exemptions explicitly (`scan_hygiene.py --allow ...`) rather than
 letting them accumulate silently. **A rule with unstated exceptions is a rule

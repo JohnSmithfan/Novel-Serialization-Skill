@@ -44,7 +44,7 @@ Everything else is open to PR.
 
 ## Changing the Skill contract
 
-`SKILL.md` and the `modules/*/SKILL.md` files define agent behaviour. A change there
+`SKILL.md` and the `modules/*/MODULE.md` files define agent behaviour. A change there
 affects every subproject at once. Required before merge:
 
 - [ ] The change is described in terms of the problem, not just the new wording
@@ -61,7 +61,7 @@ Semantic Versioning:
 | New module, script, or capability | MINOR |
 | Docs, errata, hygiene | PATCH |
 
-Every SKILL.md file carries the same `version` field. They are bumped together —
+Every `SKILL.md` and `modules/*/MODULE.md` carries the same `version` field. They are bumped together —
 a version skew between `SKILL.md` and `modules/` is a defect.
 
 ## Adding a script

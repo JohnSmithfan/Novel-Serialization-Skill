@@ -5,6 +5,34 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+- `README.md`: **Bootstrap from the Spec** — four steps and five guardrails for
+  using the generation spec to rebuild the whole tree with an AI, including the
+  warning that the spec is a v1.1 baseline and this repository is the reference
+  implementation.
+- `README_FOR_AI.md` §0.6 *Reference Implementation Precedence*: names the files
+  added after v1.1 (`tests/`, `docs/adr/`, `scripts/dev.py`, `.refsignore`, …)
+  and makes `dev.py all` the executable half of the generation checklist.
+
+### Changed
+- **Breaking (layout):** module contracts renamed from `modules/*/SKILL.md` to
+  `modules/*/MODULE.md`. Skill loaders discover skills by filename, so the old
+  layout registered every module as a separate skill. Paths updated in `SKILL.md`,
+  `CONTRIBUTING.md`, `GOVERNANCE.md`, `references/glossary.md`, the generation
+  spec, `novel-release.yml` and all six contracts.
+- `README_FOR_AI.md` renamed references: every `README FOR AI.md` link now points
+  at `README_FOR_AI.md`, and the 500-line allow-list in `scripts/dev.py`, CI and
+  `.pre-commit-config.yaml` matches the underscore form again.
+
+### Fixed
+- `scripts/scan_hygiene.py`: CRLF counter built an f-string with a backslash in
+  the expression, which is a SyntaxError on Python 3.9–3.11 while the project
+  declares `requires-python = ">=3.9"`.
+- `scripts/`: 28 lint findings cleared (E401, E701, E702, E741, F401, F541,
+  F841) so `python scripts/dev.py all` is green end to end.
+
 ## [1.4.0] - 2026-10-17
 
 ### Added
@@ -235,7 +263,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `CONTRIBUTING.md` no longer tells contributors to run `validate.py` or `tests/` (neither exists)
 - `CONTRIBUTING.md`: leftover `feature/` branch prefix unified to `feat/`
 - `references/method-patterns-publishing.md`: malformed `poV:` frontmatter key corrected to `pov:`
-- `modules/chapter-writing/SKILL.md`: the undefined "continuity state header" term now points at
+- `modules/chapter-writing/MODULE.md` (then `SKILL.md`): the undefined "continuity state header" term now points at
   the concrete frontmatter defined in the publishing template
 - `SECURITY.md`: GitHub's template boilerplate sentence replaced with real content
 - `README.md`: directory tree was missing `.gitattributes` and the audit reports

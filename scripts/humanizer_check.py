@@ -19,7 +19,6 @@ Humanizer 检查脚本 —— 《奉天1928》去 AI 痕迹自检工具
 """
 
 import sys
-import os
 import re
 import argparse
 from pathlib import Path

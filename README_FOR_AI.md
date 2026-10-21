@@ -3,11 +3,12 @@
 > **Purpose**: This document is a meta-instruction set. It directs an AI agent to generate a complete, production-grade **GitHub Novel Serialization Skill** project. Every section below is a mandatory generation directive — follow them precisely.
 >
 > **Document Metadata**:
-> - **Version**: 1.1.2
+> - **Version**: 1.2.0
 > - **Status**: Approved
-> - **Last Updated**: 2026-09-14
-> - **Review**: Post-generation audit completed; see [README_FOR_AI_Audit_Report](README_FOR_AI_Audit_Report.md) — see audit report for issues found and fixes applied
-> **File Naming Note**: This file should be named `README FOR AI.md` (with `.md` extension) to match its Markdown content and document title. The filename `README_F.txt` is a temporary upload name and should be corrected during project setup.
+> - **Last Updated**: 2026-10-22
+> - **Scope**: v1.1 baseline of the Skill specification. Later additions are listed under Section 0.6; where this document and the repository disagree, the repository wins.
+>
+> **File Naming Note**: Keep this file named `README_FOR_AI.md`. The underscore form matters: the hygiene allow-list (`README_FOR_AI.md` in `scripts/dev.py`, CI and `.pre-commit-config.yaml`) matches on the exact filename, and a space-separated variant silently drops the 500-line exemption.
 
 
 ---
@@ -70,7 +71,7 @@ You are to generate a **complete Skill project** — not a single file, but a fu
 5. **Standardization, generalization, modularization, miniaturization, automation** — every module must be independently usable, composable, and under 500 lines.
 6. **Split permission** — any file exceeding 500 lines MUST be split into sub-modules under the same directory.
 
-> **NOTE**: This document (`README FOR AI.md`) is a meta-instruction/seed file, not a SKILL.md. It is exempt from the 500-line limit because it serves as the authoritative generation specification. However, it should strive for conciseness and refer to external resources where possible.
+> **NOTE**: This document (`README_FOR_AI.md`) is a meta-instruction/seed file, not a SKILL.md. It is exempt from the 500-line limit because it serves as the authoritative generation specification. However, it should strive for conciseness and refer to external resources where possible.
 
 ### 0.5 License Policy (Dual Licensing)
 
@@ -94,6 +95,25 @@ You are to generate a **complete Skill project** — not a single file, but a fu
 > **CC BY-NC-SA 4.0 Summary**: Users are free to share and adapt the novel content for non-commercial purposes, provided they give appropriate credit, indicate if changes were made, and distribute contributions under the same license.
 
 
+### 0.6 Reference Implementation Precedence
+
+> **RULE**: This document specifies the **v1.1 baseline**. The repository at
+> `https://github.com/JohnSmithfan/github-novel-serialization-skill` is the
+> **reference implementation** at a later version. Where the two disagree, the
+> repository wins. A generated tree must reproduce the reference files that this
+> document does not specify.
+>
+> Files added after v1.1 and **not** specified below: `tests/`, `docs/adr/`,
+> `scripts/dev.py`, `.refsignore`, `pyproject.toml`, `requirements-dev.txt`,
+> `Makefile`, `SUBPROJECTS.md`, `CITATION.cff`, `security.txt`, `GOVERNANCE.md`,
+> `SUPPORT.md`, `.github/CODEOWNERS`, `.github/labels.yml`, `.github/release.yml`,
+> and the `ci` / `codeql` / `label-sync` / `stale` workflows. Read them from the
+> reference implementation; do not invent equivalents.
+>
+> **Verification is not optional.** After generation, run
+> `python scripts/dev.py all` in the output tree. Section 11 below is a static
+> checklist; the script is the executable one.
+
 ---
 
 ## 1. Project Directory Structure
@@ -104,7 +124,7 @@ Generate the following complete directory tree. Every file listed is **mandatory
 github-novel-serialization-skill/
 │
 ├── README.md                           # Project overview, quick start, architecture diagram
-├── README FOR AI.md                    # THIS FILE — meta-instructions for AI generation (seed file)
+├── README_FOR_AI.md                   # THIS FILE — generation spec (seed file)
 ├── .gitignore                          # Git ignore rules
 ├── .editorconfig                       # Editor configuration
 ├── LICENSE                             # GNU General Public License v3.0 (GPL-3.0)
@@ -137,17 +157,17 @@ github-novel-serialization-skill/
 │
 ├── modules/                            # Functional modules (independently usable)
 │   ├── worldbuilding/
-│   │   └── SKILL.md                    # World-building sub-skill
+│   │   └── MODULE.md                   # World-building module contract (never SKILL.md)
 │   ├── character-design/
-│   │   └── SKILL.md                    # Character design sub-skill
+│   │   └── MODULE.md                   # Character design module contract
 │   ├── chapter-writing/
-│   │   └── SKILL.md                    # Chapter writing sub-skill
+│   │   └── MODULE.md                   # Chapter writing module contract
 │   ├── continuity-check/
-│   │   └── SKILL.md                    # Continuity & consistency verification sub-skill
+│   │   └── MODULE.md                   # Continuity & consistency verification contract
 │   ├── publishing-workflow/
-│   │   └── SKILL.md                    # GitHub publishing & release sub-skill
+│   │   └── MODULE.md                   # GitHub publishing & release contract
 │   └── continuity-tracker/
-│       └── SKILL.md                    # State tracking & memory persistence sub-skill
+│       └── MODULE.md                   # State tracking & memory persistence contract
 │
 └── .github/                            # GitHub community health files
     ├── ISSUE_TEMPLATE/
@@ -334,45 +354,46 @@ A comprehensive prompt template that, when pasted into any AI chat, instructs th
 ### 5.1 Design Principles
 
 Each module is an **independently usable sub-skill** that:
-- Has its own `SKILL.md` with proper YAML frontmatter (including `license: GPL-3.0` and `novel_content_license: CC-BY-NC-SA-4.0`)
-- Can be loaded independently by an agent
+- Has its own `MODULE.md` with proper YAML frontmatter (including `license: GPL-3.0` and `novel_content_license: CC-BY-NC-SA-4.0`)
+- Is named `MODULE.md`, never `SKILL.md`: skill loaders discover skills by filename, and a `SKILL.md` in each module directory registers every module as a separate, unwanted skill
+- Can be loaded independently by an agent when referenced explicitly
 - Follows the same index-only pattern as the root SKILL.md
 - References `references/` for templates
 - Is under 500 lines
 
 ### 5.2 Module Specifications
 
-#### `modules/worldbuilding/SKILL.md`
+#### `modules/worldbuilding/MODULE.md`
 - **name**: `novel-worldbuilding`
 - **Purpose**: Generate and maintain world-building documents
 - **Triggers**: "build a world", "create setting", "design magic system"
 - **References**: `../../references/method-patterns-worldbuilding.md`
 
-#### `modules/character-design/SKILL.md`
+#### `modules/character-design/MODULE.md`
 - **name**: `novel-character-design`
 - **Purpose**: Generate and maintain character sheets
 - **Triggers**: "create character", "design protagonist", "character relationships"
 - **References**: `../../references/method-patterns-character.md`
 
-#### `modules/chapter-writing/SKILL.md`
+#### `modules/chapter-writing/MODULE.md`
 - **name**: `novel-chapter-writing`
 - **Purpose**: Draft chapters following established style and continuity
 - **Triggers**: "write chapter", "draft next scene", "continue story"
 - **References**: `../../references/method-patterns-chapter.md`
 
-#### `modules/continuity-check/SKILL.md`
+#### `modules/continuity-check/MODULE.md`
 - **name**: `novel-continuity-check`
 - **Purpose**: Verify consistency across all chapters and state files
 - **Triggers**: "check continuity", "verify consistency", "find plot holes"
 - **References**: `../../references/method-patterns-continuity.md`
 
-#### `modules/publishing-workflow/SKILL.md`
+#### `modules/publishing-workflow/MODULE.md`
 - **name**: `novel-publishing-workflow`
 - **Purpose**: Manage Git-based publishing pipeline for serialized chapters
 - **Triggers**: "publish chapter", "create release", "tag version"
 - **References**: `../../references/method-patterns-publishing.md`
 
-#### `modules/continuity-tracker/SKILL.md`
+#### `modules/continuity-tracker/MODULE.md`
 - **name**: `novel-continuity-tracker`
 - **Purpose**: Maintain persistent state files (timeline, character states, thread ledger)
 - **Triggers**: "update state", "track timeline", "log character status"
@@ -389,10 +410,10 @@ Every generated file must satisfy the following Harness Engineering principles:
 | **Constraint before generation** | SKILL.md `## Constraints & Boundaries` section must list hard rules before any workflow steps |
 | **Structured memory** | `modules/continuity-tracker/` defines state file formats; state is persisted in structured Markdown files, not in conversation context |
 | **Verification gates** | `## Verification Gates` in SKILL.md + `prompts/02-robustness-checks.md` — no chapter publishes without passing checks |
-| **Modular decomposition** | Each `modules/*/SKILL.md` is independently loadable; no circular dependencies between modules |
+| **Modular decomposition** | Each `modules/*/MODULE.md` is independently loadable; no circular dependencies between modules |
 | **Feedback loops** | `02-robustness-checks.md` produces structured feedback that feeds back into the next drafting iteration |
 | **Progressive disclosure** | SKILL.md (Layer 1: index) → references/ (Layer 2: templates) → examples/ (Layer 3: worked examples) |
-| **Context budget management** | SKILL.md ≤500 lines; each module SKILL.md ≤500 lines; references split at 500-line boundary |
+| **Context budget management** | SKILL.md ≤500 lines; each module `MODULE.md` ≤500 lines; references split at 500-line boundary |
 | **Human-in-the-loop** | `prompts/` folder enables human oversight; publishing workflow requires manual Git tag creation |
 | **Error recovery** | Continuity tracker maintains state snapshots; if a chapter breaks continuity, the system can identify the exact divergence point |
 | **Role isolation** | Each module has a single responsibility; worldbuilding module does not write chapters; chapter module does not design characters |
@@ -1301,7 +1322,7 @@ jobs:
         run: |
           echo "Running continuity verification..."
           # Run the continuity check module
-          if [ -f modules/continuity-check/SKILL.md ]; then
+          if [ -f modules/continuity-check/MODULE.md ]; then
             echo "Continuity check module found."
           else
             echo "WARNING: Continuity check module not found."
@@ -1341,7 +1362,7 @@ jobs:
 - prompts/*.md
 - Any other Markdown file in the project
 
-> **Exception**: `README FOR AI.md` (this document) is a meta-instruction/seed file and is exempt from the 500-line limit, as it serves as the authoritative generation specification.
+> **Exception**: `README_FOR_AI.md` (this document) is a meta-instruction/seed file and is exempt from the 500-line limit, as it serves as the authoritative generation specification.
 
 ### 8.2 Splitting Protocol
 
@@ -1432,7 +1453,7 @@ To ensure generated projects meet all requirements, run the following verificati
 3. **YAML validation**: Validate all `.yml` files are syntactically correct
 4. **Link check**: Verify all internal cross-references resolve
 5. **Language check**: Verify `{{OUTPUT_LANGUAGE}}` placeholder appears in all required locations
-6. **Frontmatter check**: Verify all SKILL.md files have valid YAML frontmatter
+6. **Frontmatter check**: Verify the root `SKILL.md` and every `modules/*/MODULE.md` have valid YAML frontmatter
 7. **License check**: Verify `LICENSE` file contains "GNU GENERAL PUBLIC LICENSE" and version "3"
 8. **Novel content license check**: Verify `LICENSES/CC-BY-NC-SA-4.0.txt` exists and contains "Creative Commons"
 9. **SKILL.md license field check**: Verify `license: GPL-3.0` and `novel_content_license: CC-BY-NC-SA-4.0` are present in SKILL.md frontmatter
@@ -1441,15 +1462,15 @@ To ensure generated projects meet all requirements, run the following verificati
 
 ## 12. Generation Sequence
 
-> **IMPORTANT**: `README FOR AI.md` (this file) is the **seed file**. It must be created first as the authoritative specification. All other files are generated based on its instructions.
+> **IMPORTANT**: `README_FOR_AI.md` (this file) is the **seed file**. It must be created first as the authoritative specification. All other files are generated based on its instructions.
 
 Execute file generation in this order to maintain referential integrity:
 
-1. `README FOR AI.md` — **seed file (already created)**
+1. `README_FOR_AI.md` — **seed file (already created)**
 2. `references/method-patterns.md` (and split modules) — templates first
 3. `references/glossary.md` — terminology
 4. `references/examples/*` — worked examples
-5. `modules/*/SKILL.md` — sub-skills referencing templates
+5. `modules/*/MODULE.md` — module contracts referencing templates (never `SKILL.md`)
 6. `SKILL.md` — root index referencing modules and references
 7. `prompts/README.md` — usage guide
 8. `prompts/01-implement-method.md` — implementation prompt

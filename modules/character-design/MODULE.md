@@ -30,7 +30,7 @@ All generated novel content MUST be output in the language specified by the user
 - **Scope:** Applies to all generated narrative content, NOT to Skill infrastructure files
 - **Infrastructure files** (SKILL.md, references/, module definitions) remain in English to ensure cross-tool compatibility
 
-See [Section 0.3 of README FOR AI](../../README%20FOR%20AI.md#03-runtime-output-language-single-authority) for the authoritative declaration.
+See [Section 0.3 of README_FOR_AI.md](../../README_FOR_AI.md#03-runtime-output-language-single-authority) for the authoritative declaration.
 
 ## Quick Start
 
@@ -46,11 +46,11 @@ This module is a peer of the following modules. It may hand off to them, but it 
 
 | Skill | Purpose | Path |
 |-------|---------|------|
-| novel-worldbuilding | Generates and maintains world-building documents for novel serialization projects. Covers magic systems, geography, politics, technology, history, and culture design. | [SKILL.md](../worldbuilding/SKILL.md) |
-| novel-chapter-writing | Drafts chapters following established world-building, character designs, and style guidelines while maintaining continuity with previous chapters. | [SKILL.md](../chapter-writing/SKILL.md) |
-| novel-continuity-check | Verifies consistency across all chapters and state files, identifying plot holes, timeline errors, and character inconsistency. | [SKILL.md](../continuity-check/SKILL.md) |
-| novel-publishing-workflow | Manages Git-based publishing pipeline for serialized chapters including tagging, release notes, and automated verification. | [SKILL.md](../publishing-workflow/SKILL.md) |
-| novel-continuity-tracker | Maintains persistent state files including timeline, character states, location states, and unresolved thread ledger for cross-session state management. | [SKILL.md](../continuity-tracker/SKILL.md) |
+| novel-worldbuilding | Generates and maintains world-building documents for novel serialization projects. Covers magic systems, geography, politics, technology, history, and culture design. | [MODULE.md](../worldbuilding/MODULE.md) |
+| novel-chapter-writing | Drafts chapters following established world-building, character designs, and style guidelines while maintaining continuity with previous chapters. | [MODULE.md](../chapter-writing/MODULE.md) |
+| novel-continuity-check | Verifies consistency across all chapters and state files, identifying plot holes, timeline errors, and character inconsistency. | [MODULE.md](../continuity-check/MODULE.md) |
+| novel-publishing-workflow | Manages Git-based publishing pipeline for serialized chapters including tagging, release notes, and automated verification. | [MODULE.md](../publishing-workflow/MODULE.md) |
+| novel-continuity-tracker | Maintains persistent state files including timeline, character states, location states, and unresolved thread ledger for cross-session state management. | [MODULE.md](../continuity-tracker/MODULE.md) |
 
 ## References
 

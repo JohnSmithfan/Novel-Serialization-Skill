@@ -22,7 +22,7 @@ changes to this document in a pull request.
 - [Prompts Directory — Dual-Mode Design Philosophy](#prompts-directory--dual-mode-design-philosophy)
 - [Module Development Guidelines](#module-development-guidelines)
   - [The 500-Line Rule](#the-500-line-rule)
-  - [Module SKILL.md Structure](#module-skillmd-structure)
+  - [Module Contract Structure](#module-contract-structure)
 - [License Compliance](#license-compliance)
 - [Recognition Policy](#recognition-policy)
 - [Style Guidelines](#style-guidelines)
@@ -42,7 +42,7 @@ uphold this code.
 github-novel-serialization-skill/
 │
 ├── README.md                           # Project overview, quick start, architecture diagram
-├── README FOR AI.md                    # Meta-instructions for AI generation (seed file)
+├── README_FOR_AI.md                    # Generation spec — bootstrap a new tree (seed file)
 ├── .gitignore                          # Git ignore rules
 ├── .gitattributes                      # Line-ending and binary policy
 ├── .editorconfig                       # Editor configuration
@@ -91,17 +91,17 @@ github-novel-serialization-skill/
 │
 ├── modules/                            # Functional modules (independently usable)
 │   ├── worldbuilding/
-│   │   └── SKILL.md                    # World-building sub-skill
+│   │   └── MODULE.md                   # World-building module contract
 │   ├── character-design/
-│   │   └── SKILL.md                    # Character design sub-skill
+│   │   └── MODULE.md                   # Character design module contract
 │   ├── chapter-writing/
-│   │   └── SKILL.md                    # Chapter writing sub-skill
+│   │   └── MODULE.md                   # Chapter writing module contract
 │   ├── continuity-check/
-│   │   └── SKILL.md                    # Continuity & consistency verification sub-skill
+│   │   └── MODULE.md                   # Continuity & consistency verification contract
 │   ├── publishing-workflow/
-│   │   └── SKILL.md                    # GitHub publishing & release sub-skill
+│   │   └── MODULE.md                   # GitHub publishing & release contract
 │   └── continuity-tracker/
-│       └── SKILL.md                    # State tracking & memory persistence sub-skill
+│       └── MODULE.md                   # State tracking & memory persistence contract
 │
 ├── scripts/                            # Shared automation (invoked from a subproject root)
 │   ├── README.md                       # Catalog & invocation conventions
@@ -240,14 +240,14 @@ The `prompts/` directory contains prompt templates that operate in **dual-mode**
 2. **Agent-assisted mode** (secondary): The modules under `modules/` may refer to the
    *methodology* these prompts encode when orchestrating a workflow. The prompt files
    themselves are **not** invoked directly by an agent — see
-   spec Section 4.1 and the anti-pattern table in Section 13 of README FOR AI.md.
+   spec Section 4.1 and the anti-pattern table in Section 13 of README_FOR_AI.md.
 
 **Key rules for prompts/:**
 - Files in `prompts/` are **NOT** for agent auto-invocation — they are standalone
   templates designed for human interaction
 - Each prompt file must be self-contained and work independently
 - The `{{OUTPUT_LANGUAGE}}` placeholder must be present in all prompt templates
-  (see Section 0.3 of README FOR AI.md for the authoritative declaration)
+  (see Section 0.3 of README_FOR_AI.md for the authoritative declaration)
 - Prompt templates must instruct the AI to include the CC BY-NC-SA 4.0 license
   header in all generated novel content
 
@@ -273,15 +273,17 @@ method documents. Three kinds of file legitimately exceed it:
 |------|----------|-----------|
 | Ledger / log | `CHANGELOG.md`, `progress.md`, decision ledger | Exempt — chronological append, never read end-to-end |
 | Reference table | setting compendia | Split by domain first; if one domain is genuinely thousands of lines, split by section and link |
-| Generated / seed | `README FOR AI.md` | Exempt, but never hand-edited |
+| Generated / seed | `README_FOR_AI.md` | Exempt, but never hand-edited |
 
 Declare an exemption with `scan_hygiene.py --allow <file>` so it is visible in
 CI rather than accumulating silently. A rule with unstated exceptions is a rule
 nobody follows. See `references/subproject-playbook.md` Section 10.
 
-### Module SKILL.md Structure
+### Module Contract Structure
 
-Each module under `modules/` must have its own `SKILL.md` with:
+Each module under `modules/` must have its own `MODULE.md` (never `SKILL.md` —
+skill loaders discover skills by filename and would register every module as a
+separate skill) with:
 
 - **YAML Frontmatter**: Including `name`, `description`, `license: GPL-3.0`,
   `novel_content_license: CC-BY-NC-SA-4.0`
@@ -301,7 +303,7 @@ This project uses a **dual-licensing** model:
 
 **Important rules:**
 - Every generated novel file MUST carry the CC BY-NC-SA 4.0 license header block before any narrative content. Where a file also carries YAML frontmatter (mandatory for chapter files — see `references/method-patterns-publishing.md` Section 3), the ordering is: frontmatter at byte 0, then the CC license header, then the narrative.
-- Module SKILL.md files MUST declare both licenses in YAML frontmatter
+- Module `MODULE.md` contracts MUST declare both licenses in YAML frontmatter
 - Prompt templates MUST instruct the AI to include the CC BY-NC-SA 4.0 header
 - Do NOT mix license-protected content across license boundaries
 

@@ -19,7 +19,7 @@ When generating novel content, reference the appropriate split module for detail
 
 ## Splitting Protocol
 
-If any split module exceeds 500 lines, it must be further subdivided following the protocol in [README FOR AI.md](../README%20FOR%20AI.md#82-splitting-protocol).
+If any split module exceeds 500 lines, it must be further subdivided following the protocol in [README_FOR_AI.md](../README_FOR_AI.md#82-splitting-protocol).
 
 ## License
 

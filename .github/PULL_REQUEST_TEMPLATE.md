@@ -44,7 +44,7 @@ Run from the repository root and paste the result:
 
 ```
 python scripts/scan_hygiene.py --root . --max-lines 500 \
-    --allow "README FOR AI.md,CHANGELOG.md,LICENSE,LICENSES/CC-BY-NC-SA-4.0.txt" \
+    --allow "README_FOR_AI.md,CHANGELOG.md,LICENSE,LICENSES/CC-BY-NC-SA-4.0.txt" \
     --fail-on crlf,junk,mojibake
 python scripts/check_refs.py --root . --kind MISSING --kind NONRELEASE
 ```

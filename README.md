@@ -14,6 +14,7 @@
 - [Overview](#overview)
 - [Architecture](#architecture)
 - [Quick Start](#quick-start)
+- [Bootstrap from the Spec](#bootstrap-from-the-spec)
 - [Directory Structure](#directory-structure)
 - [Development](#development)
 - [Modules](#modules)
@@ -120,13 +121,76 @@ Open your AI chat window and use any trigger phrase:
 
 ---
 
+## Bootstrap from the Spec
+
+Every other section assumes you use this repository as it is. This one is for the
+opposite case: you want the **whole project regenerated** — a fork with your own
+naming, a rebuild from scratch, or a variant for a different agent — and you would
+rather hand the job to an AI than copy forty-odd files by hand.
+
+`README_FOR_AI.md` is the generation spec: 1,490 lines of directives that tell an
+agent which files to create, what each must contain, and in which order. It ends
+with "Generate all files now. Do not improvise structure." — that is the intended
+use.
+
+### Step 1 — Start from an empty directory
+
+```
+mkdir my-skill && cd my-skill
+```
+
+Do **not** run the generation inside a repository you care about. The spec
+describes a full tree; an agent following it will create or overwrite files at
+the output root.
+
+### Step 2 — Hand the spec to your agent
+
+```
+Read README_FOR_AI.md and generate the complete project it specifies.
+Output root: ./  (currently empty)
+Follow the generation sequence in Section 12. Do not improvise structure.
+When a file is not covered by the spec, mirror this reference implementation:
+https://github.com/JohnSmithfan/github-novel-serialization-skill
+```
+
+Feed the file whole. An excerpt drops the constraints that make the output
+consistent.
+
+### Step 3 — Expect to reconcile
+
+The spec is a **v1.1 baseline**. This repository is the reference implementation
+at a later version, and where the two disagree, the repository wins. Known gaps
+the spec does not cover: `tests/`, `docs/adr/`, `scripts/dev.py`, `.refsignore`,
+`pyproject.toml`, `requirements-dev.txt`, `Makefile`, and four of the five
+workflows in `.github/workflows/`. Treat generated files that differ from this
+repository as review items, not as errors.
+
+### Step 4 — Run the gates before trusting the result
+
+```
+python -m pip install -r requirements-dev.txt
+python scripts/dev.py all
+```
+
+Without this step you have plausible files, not a working Skill. The spec's own
+Section 11 checklist is static — line counts, file presence, links; `dev.py`
+executes the same checks plus the reference gate and the test suite.
+
+> **Why module contracts are not named `SKILL.md`.** Skills are discovered by
+> filename. A `SKILL.md` in every subdirectory is registered as a separate skill
+> by most loaders — this repository shipped that way once, and the six module
+> contracts surfaced as six extra skills. Keep them named `MODULE.md`; a
+> generated tree that writes `modules/*/SKILL.md` reintroduces the bug.
+
+---
+
 ## Directory Structure
 
 ```
 github-novel-serialization-skill/
 |
 +-- README.md                           # This file
-+-- README FOR AI.md                    # Meta-instructions for AI generation (seed file)
++-- README_FOR_AI.md                    # Generation spec — bootstrap a new tree from it (seed file)
 +-- SKILL.md                            # Index + quick-reference
 +-- CHANGELOG.md                        # Version history
 +-- SUBPROJECTS.md                      # Registered independent novel subprojects
@@ -188,13 +252,13 @@ github-novel-serialization-skill/
 |   +-- 01-implement-method.md
 |   +-- 02-robustness-checks.md
 |
-+-- modules/                            # Functional sub-skills
-|   +-- worldbuilding/SKILL.md
-|   +-- character-design/SKILL.md
-|   +-- chapter-writing/SKILL.md
-|   +-- continuity-check/SKILL.md
-|   +-- publishing-workflow/SKILL.md
-|   +-- continuity-tracker/SKILL.md
++-- modules/                            # Functional modules (contracts, NOT skills)
+|   +-- worldbuilding/MODULE.md          # not SKILL.md — loaders would register each as a skill
+|   +-- character-design/MODULE.md
+|   +-- chapter-writing/MODULE.md
+|   +-- continuity-check/MODULE.md
+|   +-- publishing-workflow/MODULE.md
+|   +-- continuity-tracker/MODULE.md
 |
 +-- .github/                            # GitHub community health files
     +-- CODEOWNERS

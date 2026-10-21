@@ -144,12 +144,12 @@ def draft_blocks(path):
     if not os.path.exists(path):
         return {}
     lines = open(path, encoding='utf-8').read().split('\n')
-    heads = [(i, l) for i, l in enumerate(lines) if PAT_HEAD_CN.match(l) or PAT_HEAD_EN.match(l)]
+    heads = [(i, ln) for i, ln in enumerate(lines) if PAT_HEAD_CN.match(ln) or PAT_HEAD_EN.match(ln)]
     out = {}
-    for k, (i, l) in enumerate(heads):
+    for k, (i, ln) in enumerate(heads):
         end = heads[k + 1][0] if k + 1 < len(heads) else len(lines)
-        m = PAT_HEAD_CN.match(l) or PAT_HEAD_EN.match(l)
-        out[int(m.group(1))] = (l.strip(), '\n'.join(lines[i + 1:end]).strip('\n'))
+        m = PAT_HEAD_CN.match(ln) or PAT_HEAD_EN.match(ln)
+        out[int(m.group(1))] = (ln.strip(), '\n'.join(lines[i + 1:end]).strip('\n'))
     return out
 
 
@@ -186,7 +186,7 @@ def body_lines(text):
 def cn(text):
     """中文字数（脚本口径）：去元数据行与标题行后的中文字符数"""
     return len(CN_RE.findall('\n'.join(
-        l for l in body_lines(text) if not l.startswith('#'))))
+        ln for ln in body_lines(text) if not ln.startswith('#'))))
 
 
 def paragraphs(text):
@@ -218,10 +218,10 @@ def verdict(results):
     """综合判定：FAIL > REVISE(WARN) > PASS"""
     lv = 'PASS'
     for r in results:
-        l = level_of(r.issues)
-        if l == 'FAIL':
+        level = level_of(r.issues)
+        if level == 'FAIL':
             return 'FAIL'
-        if l == 'WARN':
+        if level == 'WARN':
             lv = 'REVISE'
     return lv
 
