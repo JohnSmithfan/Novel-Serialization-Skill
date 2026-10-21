@@ -47,7 +47,7 @@ jobs:
             --out hygiene-report.md
       - name: Upload report
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: hygiene-report
           path: hygiene-report.md
@@ -68,7 +68,7 @@ jobs:
           python scripts/check_refs.py --root . --fail-on NONRELEASE,MISSING
       - name: Upload report
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: refs-report
           path: refs-report.md
