@@ -11,6 +11,7 @@ still open do not get an ADR.
 | [0001](0001-reports-are-not-released.md) | Reports are not released | Accepted |
 | [0002](0002-release-references-release.md) | Release files reference release files only | Accepted |
 | [0003](0003-dual-track-chapter-naming.md) | Dual-track chapter naming | Accepted |
+| [0004](0004-engineering-hygiene-no-messy-code.md) | Engineering hygiene — no messy/crappy code, no historical burden | Accepted |
 
 ## Status values
 

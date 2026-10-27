@@ -203,7 +203,7 @@ def main():
 
     out = "\n".join(lines)
     if args.out:
-        Path(args.out).write_text(out, encoding='utf-8')
+        Path(args.out).write_text(out, encoding='utf-8', newline='\n')
         print(f"报告已写入：{args.out}")
     print(out)
 

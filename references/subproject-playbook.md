@@ -163,6 +163,15 @@ python scripts/scan_hygiene.py --root . --fail-on crlf,junk,mojibake
 removing an older backup, record its diff against the newer one in `CHANGELOG.md`;
 never drop a backup without a trace.
 
+**工程卫生红线（禁止 messy / crappy code 与历史负担）。** LF 规则只是更硬标准的一角：
+绝不引入 messy 或 crappy code，也绝不给项目增加历史负担。具体落到本仓库——每条文本
+写入都必须带 `newline='\n'`（漏写会在 Windows 上把文件写成 CRLF，恰是本条规则要消灭的脏
+数据）；任何脚本都不得在 import 时改动全局状态（UTF-8 控制台输出统一在 `main()` 内显式
+调用 `_review_lib._enable_utf8_console()`）；不留死代码 / 注释掉的代码；已刻意移除的写法
+不要悄悄 reintroduce——若要移除历史负担，留下 `[HISTORICAL BURDEN — removed YYYY-MM]`
+注释说明移除了什么、为什么。权威表述见 `CONTRIBUTING.md`（Engineering Hygiene）与
+`docs/adr/0004-engineering-hygiene-no-messy-code.md`。
+
 ---
 
 ## 8. Change order (draft-first)

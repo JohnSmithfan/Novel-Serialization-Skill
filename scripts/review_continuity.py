@@ -280,6 +280,7 @@ def run(root, cfg):
 
 
 def main():
+    L._enable_utf8_console()
     ap = L.add_common_args(argparse.ArgumentParser(description='一致性审稿：跨章事实冲突'))
     ap.add_argument('--min-freq', type=int, default=5, help='实体最低出现次数，低于此不查异写（默认 5）')
     ap.add_argument('--min-variant', type=int, default=2, help='变体最低出现次数（默认 2）')

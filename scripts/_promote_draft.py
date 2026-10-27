@@ -24,7 +24,13 @@ import argparse
 import datetime
 import shutil
 
-sys.stdout.reconfigure(encoding='utf-8')
+# [HISTORICAL BURDEN — removed 2026-10] The line below used to mutate global
+# stdout at *import time* (a hidden side effect of merely importing this script).
+# UTF-8 console output is now enabled explicitly via _enable_utf8_console() in
+# main(), matching the pattern already used by humanizer_check.py. Do not
+# re-introduce a reconfigure at module scope.
+# sys.stdout.reconfigure(encoding='utf-8')
+from _review_lib import _enable_utf8_console
 
 # 脚本自身目录（技能仓库 scripts/）——humanizer 与本脚本同目录，随仓库一起分发
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -68,6 +74,7 @@ def humanizer_pass(path):
 
 
 def main():
+    _enable_utf8_console()
     ap = argparse.ArgumentParser()
     ap.add_argument('nums', nargs='*', help='章号，如 031 047；不给则同步全部有差异的章')
     ap.add_argument('--draft', default=DRAFT_DEFAULT)
@@ -135,7 +142,7 @@ def main():
     log = []
     for n, p, cur, new in todo:
         shutil.copy2(p, os.path.join(snap_dir, os.path.basename(p)))
-        open(p, 'w', encoding='utf-8').write(new)
+        open(p, 'w', encoding='utf-8', newline='\n').write(new)
         log.append('- 第%s章：%d → %d 字（快照 %s）' % (n, cn(cur), cn(new), snap_dir))
         print('已同步 第%s章' % n)
 
@@ -150,7 +157,7 @@ def main():
     print('章标题差异：', diff or '0（一致）')
 
     logpath = os.path.join(snap_dir, '_同步日志.md')
-    with open(logpath, 'a', encoding='utf-8') as f:
+    with open(logpath, 'a', encoding='utf-8', newline='\n') as f:
         f.write('\n## %s 草稿→定稿同步（%s）\n' % (today, datetime.datetime.now().strftime('%H:%M')))
         f.write('- 草稿：%s\n- 审核报告：%s\n' % (a.draft, a.report or '（未填写）'))
         f.write('\n'.join(log) + '\n')

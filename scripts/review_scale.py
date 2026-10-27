@@ -78,6 +78,7 @@ def run(root, cfg):
 
 
 def main():
+    L._enable_utf8_console()
     ap = L.add_common_args(argparse.ArgumentParser(description='规模审查：章节字数达标情况'))
     ap.add_argument('--target', type=int, default=4000, help='每章目标中文字数（默认 4000）')
     ap.add_argument('--max', type=int, default=0, help='每章字数上限（0 = 不限）')

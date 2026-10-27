@@ -15,6 +15,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `README_FOR_AI.md` §0.6 *Reference Implementation Precedence*: names the files
   added after v1.1 (`tests/`, `docs/adr/`, `scripts/dev.py`, `.refsignore`, …)
   and makes `dev.py all` the executable half of the generation checklist.
+- `CONTRIBUTING.md`: new **Engineering Hygiene (工程卫生)** section forbidding
+  messy/crappy code and historical burden; reinforced in `scripts/README.md`
+  (落盘守则) and `references/subproject-playbook.md` §7.
+- `docs/adr/0004-engineering-hygiene-no-messy-code.md`: ADR recording the
+  engineering-hygiene policy (no messy/crappy code, no historical burden).
 
 ### Changed
 - **Breaking (layout):** module contracts renamed from `modules/*/SKILL.md` to
@@ -32,6 +37,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   declares `requires-python = ">=3.9"`.
 - `scripts/`: 28 lint findings cleared (E401, E701, E702, E741, F401, F541,
   F841) so `python scripts/dev.py all` is green end to end.
+- `scripts/`: removed import-time `sys.stdout.reconfigure` side effects (the
+  `-1928` legacy pattern) from `_review_lib.py`, `_promote_draft.py` and
+  `_sync_draft.py`; UTF-8 console output is now enabled explicitly via
+  `_review_lib._enable_utf8_console()` in each entry point. `_sync_draft.py` body
+  was wrapped in `main()` so importing it no longer runs the sync.
+- `scripts/`: text writes in `_promote_draft.py`, `_sync_draft.py` and
+  `humanizer_check.py` now pass `newline='\n'`, so release/draft/report files are
+  no longer written as CRLF on Windows (the repo's own hard LF rule was being
+  violated).
+- `scripts/check_refs.py`: docstring said "七档" while the script implements
+  eight buckets; corrected to "八档".
 
 ## [1.4.0] - 2026-10-17
 

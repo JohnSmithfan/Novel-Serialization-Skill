@@ -188,6 +188,7 @@ def run(root, cfg):
 
 
 def main():
+    L._enable_utf8_console()
     ap = L.add_common_args(argparse.ArgumentParser(description='合理化审查：章内逻辑与写作品质'))
     ap.add_argument('--outline', default='', help='大纲文件路径（默认自动探测 worldbuilding/ 下含 `## 第N章` 的文件）')
     ap.add_argument('--max-para', type=int, default=500, help='单段字数上限（默认 500）')

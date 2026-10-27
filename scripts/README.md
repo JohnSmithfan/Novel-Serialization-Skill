@@ -89,6 +89,18 @@ python "../GitHub Novel Serialization Skill/scripts/scan_hygiene.py" --root . \
 python "../GitHub Novel Serialization Skill/scripts/init_subproject.py" --name "书名" --root ../新书
 ```
 
+### 工程卫生红线（禁止 messy / crappy code 与历史负担）
+
+文件卫生之外，还有一条更硬的工程卫生红线，专门防止「屎山代码」与历史负担：
+
+- **凡写文本，必须 `newline='\n'`**：所有落盘一律 `io.open(p, 'w', encoding='utf-8', newline='\n')`。漏写 `newline='\n'` 会在 Windows 上把文件写成 CRLF，正是本仓库明令禁止的脏数据——属于 crappy code（已在 `_promote_draft.py` / `_sync_draft.py` / `humanizer_check.py` 的写法中修正）。
+- **禁止 import 时改动全局状态**：不得在模块顶层调用 `sys.stdout.reconfigure` 等会改变进程全局状态的语句；UTF-8 控制台输出统一在 `main()` / `__main__` 内显式调用 `_review_lib._enable_utf8_console()`（参考 `humanizer_check.py` 的既成写法）。`-1928` 项目遗留的「import 即 reconfigure」写法已作为 `[HISTORICAL BURDEN]` 注释掉。
+- **不留死代码 / 注释掉的代码**：不再需要的代码直接删除，不要以注释形式「暂存」。
+- **不 reintroduce 已移除的写法**：历史负担的移除要有 `[HISTORICAL BURDEN — removed YYYY-MM]` 注释说明移除内容与原因；不要悄悄把旧写法加回来。
+- **不堆积垃圾**：`.pyc` / `__pycache__` / 工具缓存一律 `.gitignore`，绝不提交。
+
+上述规则由 `scripts/dev.py all`（hygiene → refs → lint → test）、pre-commit 与 CI 共同把关；权威表述见 `CONTRIBUTING.md`（Engineering Hygiene）与 `docs/adr/0004-engineering-hygiene-no-messy-code.md`。
+
 ### 审稿脚本设计约定
 
 1. **命名兼容**：同时支持通用命名 `ch-001-title.md` 与子项目命名 `第001章 标题.md`；草稿按 `## 第N章` 分块。

@@ -26,7 +26,30 @@ import glob
 import datetime
 from collections import namedtuple
 
-sys.stdout.reconfigure(encoding='utf-8')
+# [HISTORICAL BURDEN — removed 2026-10]
+# Legacy pattern (kept here as a cautionary comment, NOT executed):
+#     sys.stdout.reconfigure(encoding='utf-8')
+# This used to run at *module import time*. Importing this shared library
+# mutated global process state for every importer — tests, dev.py, and sibling
+# scripts — as a silent side effect of a harmless `import`. That is exactly the
+# kind of crappy code we forbid: a global mutation triggered by an import.
+# The UTF-8 console behaviour is preserved by calling _enable_utf8_console()
+# EXPLICITLY inside each script's main()/__main__ (see humanizer_check.py for
+# the established pattern). Never re-introduce a reconfigure at module scope.
+
+
+def _enable_utf8_console() -> None:
+    """Best-effort UTF-8 stdout so CJK report text renders on Windows consoles.
+
+    Guarded on purpose: captured streams under pytest, non-CPython runtimes,
+    or a missing attribute degrade to a no-op instead of crashing the import.
+    Call this once per process, from an entry point — not at import time.
+    """
+    try:
+        if hasattr(sys.stdout, "reconfigure"):
+            sys.stdout.reconfigure(encoding="utf-8")
+    except (ValueError, OSError):
+        pass
 
 LEVEL_ORDER = {"PASS": 0, "WARN": 1, "FAIL": 2}
 

@@ -26,6 +26,7 @@ changes to this document in a pull request.
 - [License Compliance](#license-compliance)
 - [Recognition Policy](#recognition-policy)
 - [Style Guidelines](#style-guidelines)
+- [Engineering Hygiene (工程卫生)](#engineering-hygiene-工程卫生)
 - [Git Conventions](#git-conventions)
 
 ## Code of Conduct
@@ -342,6 +343,46 @@ Git commit authorship intact.
 - **Code blocks**: Use language identifiers where applicable
 - **Tables**: Use Markdown tables for structured data
 - **Links**: Use relative links for internal references
+
+## Engineering Hygiene (工程卫生)
+
+Engineering hygiene is the discipline that keeps this repository free of messy
+code, crappy code, and accumulating historical burden. The tooling gates
+(`python scripts/dev.py all`) catch file-level and reference-level drift; the
+rules below govern the code and habits that gates cannot see.
+
+### No messy or crappy code
+- **Obey the project's own rules.** The hard rules are non-negotiable. In
+  particular, every text write uses `io.open(p, 'w', encoding='utf-8',
+  newline='\n')` (see `references/subproject-playbook.md` §7). A script that
+  writes text without `newline='\n'` reintroduces the CRLF defect the playbook
+  explicitly bans — that is crappy code by definition.
+- **No global side effects at import.** Importing a module must not mutate
+  process state (stdout encoding, environment, globals). UTF-8 console output is
+  enabled by calling `_review_lib._enable_utf8_console()` explicitly inside
+  `main()` / `__main__`, never at module scope.
+- **No dead or commented-out code left in place.** Remove code you no longer
+  need; do not park it behind a comment "in case we need it later".
+- **Single responsibility, small surface.** Keep modules focused and under the
+  500-line budget. Prefer the shared library (`_review_lib.py`) over copy-paste.
+
+### No historical burden
+- **Do not reintroduce removed patterns.** If a legacy pattern was replaced, keep
+  the replacement; do not quietly bring the old one back.
+- **Annotate, don't abandon.** When you remove a legacy pattern, leave a short
+  `[HISTORICAL BURDEN — removed YYYY-MM]` note explaining what was removed and
+  why, so the next reader understands the decision instead of re-litigating it.
+- **No cruft accumulation.** Temp files, backups, and tool caches belong in
+  `.gitignore` (they already do). Do not commit `.pyc`, `__pycache__`, or tool
+  caches.
+- **Generated / seed files stay generated.** `README_FOR_AI.md` is a generated
+  seed file; never hand-edit it, and do not duplicate its content elsewhere.
+
+### Enforcement
+These rules are enforced by `scripts/dev.py all` (hygiene → refs → lint → test),
+the pre-commit hooks, and CI. A PR that breaks them is blocked regardless of how
+small the change is. The decision is recorded as
+[ADR-0004](docs/adr/0004-engineering-hygiene-no-messy-code.md).
 
 ## Git Conventions
 

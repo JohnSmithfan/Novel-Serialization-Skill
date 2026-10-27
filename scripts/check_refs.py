@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""check_refs.py —— 引用完整性体检（七档判定）。
+"""check_refs.py —— 引用完整性体检（八档判定）。
 
 The rule
 --------

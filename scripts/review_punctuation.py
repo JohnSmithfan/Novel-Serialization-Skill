@@ -121,6 +121,7 @@ def run(root, cfg):
 
 
 def main():
+    L._enable_utf8_console()
     ap = L.add_common_args(argparse.ArgumentParser(description='标点审查：标点、引号与用字规范'))
     ap.add_argument('--max-dash', type=float, default=5, help='破折号密度上限（每千字，默认 5）')
     ap.add_argument('--max-ellipsis', type=float, default=2, help='省略号密度上限（每千字，默认 2）')

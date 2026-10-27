@@ -90,6 +90,7 @@ def todo_list(results):
 
 
 def main():
+    L._enable_utf8_console()
     ap = L.add_common_args(argparse.ArgumentParser(description='综合审稿：一次跑完门禁，支持三审分阶段'))
     ap.add_argument('--batch', default='', help='批次名（写入报告标题，如「第9批」）')
     ap.add_argument('--stage', default='', choices=('',) + L.STAGE_KEYS,
