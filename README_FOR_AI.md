@@ -1,4 +1,5 @@
 # README_FOR_AI.md
+> **Document Role**: This document is the project's single master specification — the "S" (Specification) in SDD — authorized by `docs/adr/0005-engineering-sdd-atdd.md`. It defines the specification-driven development direction for the transmedia pipeline (novel → script → storyboard → comic → animation → film) and the schema for development plans (defined in Section 15), so the project can be developed zero-from-scratch, phase by phase, from this document alone without copying the entire repository.
 
 > **Purpose**: This document is a meta-instruction set. It directs an AI agent to generate a complete, production-grade **GitHub Novel Serialization Skill** project. Every section below is a mandatory generation directive — follow them precisely.
 >
@@ -6,7 +7,7 @@
 > - **Version**: 1.2.0
 > - **Status**: Approved
 > - **Last Updated**: 2026-10-22
-> - **Scope**: v1.1 baseline of the Skill specification. Later additions are listed under Section 0.6; where this document and the repository disagree, the repository wins.
+> - **Scope**: v1.1 baseline of the Skill specification; where this document and the repository disagree, the repository wins.
 >
 > **File Naming Note**: Keep this file named `README_FOR_AI.md`. The underscore form matters: the hygiene allow-list (`README_FOR_AI.md` in `scripts/dev.py`, CI and `.pre-commit-config.yaml`) matches on the exact filename, and a space-separated variant silently drops the 500-line exemption.
 
@@ -71,7 +72,7 @@ You are to generate a **complete Skill project** — not a single file, but a fu
 5. **Standardization, generalization, modularization, miniaturization, automation** — every module must be independently usable, composable, and under 500 lines.
 6. **Split permission** — any file exceeding 500 lines MUST be split into sub-modules under the same directory.
 
-> **NOTE**: This document (`README_FOR_AI.md`) is a meta-instruction/seed file, not a SKILL.md. It is exempt from the 500-line limit because it serves as the authoritative generation specification. However, it should strive for conciseness and refer to external resources where possible.
+> **NOTE**: This document (`README_FOR_AI.md`) is the project's master specification — the "S" (Specification) in SDD — not a SKILL.md. It is exempt from the 500-line limit because it consolidates the specification-driven development direction and the development-plan schema for the transmedia pipeline (novel → script → storyboard → comic → animation → film), enabling zero-from-scratch development from this document alone. It should still strive for conciseness and refer to external resources (`specs/`, `references/`) where possible.
 
 ### 0.5 License Policy (Dual Licensing)
 
@@ -94,27 +95,6 @@ You are to generate a **complete Skill project** — not a single file, but a fu
 >
 > **CC BY-NC-SA 4.0 Summary**: Users are free to share and adapt the novel content for non-commercial purposes, provided they give appropriate credit, indicate if changes were made, and distribute contributions under the same license.
 
-
-### 0.6 Reference Implementation Precedence
-
-> **RULE**: This document specifies the **v1.1 baseline**. The repository at
-> `https://github.com/JohnSmithfan/github-novel-serialization-skill` is the
-> **reference implementation** at a later version. Where the two disagree, the
-> repository wins. A generated tree must reproduce the reference files that this
-> document does not specify.
->
-> Files added after v1.1 and **not** specified below: `tests/`, `docs/adr/`,
-> `scripts/dev.py`, `.refsignore`, `pyproject.toml`, `requirements-dev.txt`,
-> `Makefile`, `SUBPROJECTS.md`, `CITATION.cff`, `security.txt`, `GOVERNANCE.md`,
-> `SUPPORT.md`, `.github/CODEOWNERS`, `.github/labels.yml`, `.github/release.yml`,
-> and the `ci` / `codeql` / `label-sync` / `stale` workflows. Read them from the
-> reference implementation; do not invent equivalents.
->
-> **Verification is not optional.** After generation, run
-> `python scripts/dev.py all` in the output tree. Section 11 below is a static
-> checklist; the script is the executable one.
-
----
 
 ## 1. Project Directory Structure
 
@@ -259,7 +239,7 @@ This is the **single source of truth** for all structural templates, code patter
 - `method-patterns-continuity.md`
 - `method-patterns-publishing.md`
 
-The master file then becomes an index pointing to each split module. See **Section 8** for the splitting protocol.
+The master file then becomes an index pointing to each split module. See **Section 7** for the splitting protocol.
 
 ### 3.2 `glossary.md`
 
@@ -422,939 +402,9 @@ Every generated file must satisfy the following Harness Engineering principles:
 
 ---
 
-## 7. GitHub Standard Files — Generation Specifications
+## 7. File Size & Splitting Rules
 
-> **NOTE**: This section provides generation specifications for GitHub standard files. Files marked with [Full Content] include complete file templates that can be copied directly. Files marked with [Description Only] provide structural guidance — the AI agent should generate appropriate content based on the described requirements.
-
-### 7.1 `README.md` [Description Only]
-
-Must contain:
-- Project name and badge (license, version)
-- One-paragraph description
-- Architecture diagram (ASCII or Mermaid)
-- Quick Start (3 steps)
-- Directory structure overview
-- Module descriptions (one line each)
-- Installation instructions (how to add to `.github/skills/` or `~/.claude/skills/`)
-- Usage examples
-- Contributing link
-- License link (GPL-3.0)
-- Novel content license link (CC BY-NC-SA 4.0)
-- Credits
-
-### 7.2 `.gitignore` [Full Content]
-
-```gitignore
-# OS files
-.DS_Store
-Thumbs.db
-ehthumbs.db
-Desktop.ini
-
-# Editor files
-*.swp
-*.swo
-*~
-.idea/
-.vscode/
-*.sublime-project
-*.sublime-workspace
-*.code-workspace
-
-# Python
-__pycache__/
-*.py[cod]
-*$py.class
-*.so
-.Python
-env/
-.venv/
-venv/
-ENV/
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
-
-# Node (if scripts are added later)
-node_modules/
-npm-debug.log*
-yarn-error.log*
-
-# Draft/temp files
-drafts/
-temp/
-*.tmp
-*.bak
-
-# AI tool cache
-.claude/
-.copilot/
-.agents/
-.env
-.env.local
-
-# Logs
-*.log
-logs/
-
-# Dependency updates
-.pip-wheel-metadata/
-```
-
-### 7.3 `.editorconfig` [Full Content]
-
-```editorconfig
-root = true
-
-[*]
-charset = utf-8
-end_of_line = lf
-indent_style = space
-indent_size = 2
-insert_final_newline = true
-trim_trailing_whitespace = true
-
-[*.md]
-trim_trailing_whitespace = false
-
-[*.yml]
-indent_size = 2
-
-[*.yaml]
-indent_size = 2
-```
-
-### 7.4 `LICENSE` [Full Content]
-
-```
-                    GNU GENERAL PUBLIC LICENSE
-                       Version 3, 29 June 2007
-
- Copyright (C) 2007 Free Software Foundation, Inc. <https://fsf.org/>
- Everyone is permitted to copy and distribute verbatim copies
- of this license document, but changing it is not allowed.
-
-                            Preamble
-
-  The GNU General Public License is a free, copyleft license for
-software and other kinds of works.
-
-  The licenses for most software and other practical works are designed
-to take away your freedom to share and change the works.  By contrast,
-the GNU General Public License is intended to guarantee your freedom to
-share and change all versions of a program--to make sure it remains free
-software for all its users.  We, the Free Software Foundation, use the
-GNU General Public License for most of our software; it applies also to
-any other work released this way by its authors.  You can apply it to
-your programs, too.
-
-  When we speak of free software, we are referring to freedom, not
-price.  Our General Public Licenses are designed to make sure that you
-have the freedom to distribute copies of free software (and charge for
-them if you wish), that you receive source code or can get it if you
-want it, that you can change the software or use pieces of it in new
-free programs, and that you know you can do these things.
-
-  To protect your rights, we need to prevent others from denying you
-these rights or asking you to surrender the rights.  Therefore, you have
-certain responsibilities if you distribute copies of the software, or if
-you modify it: responsibilities to respect the freedom of others.
-
-  For example, if you distribute copies of such a program, whether
-gratis or for a fee, you must pass on to the recipients the same
-freedoms that you received.  You must make sure that they, too, receive
-or can get the source code.  And you must show them these terms so they
-know their rights.
-
-  Developers that use the GNU GPL protect your rights with two steps:
-(1) assert copyright on the software, and (2) offer you this License
-giving you legal permission to copy, distribute and/or modify it.
-
-  For the developers' and authors' protection, the GPL clearly explains
-that there is no warranty for this free software.  For both users' and
-authors' sake, the GPL requires that modified versions be marked as
-changed, so that their problems will not be attributed to previous
-authors.  Some contributors may be motivated by a desire to contribute
-to a community of developers and other users.  If contributors don't
-see why they should contribute, then it seems inappropriate to require
-from them what we should not ask of them.
-
-  For more information on this license and the Free Software Foundation,
-please visit <https://www.gnu.org/licenses/>.
-
-  The following applies also to both programmers and users of the software:
-If you modify the program (or a work based on it), you must make sure the
-modified program is also distributed under the GPL, so that the community
-can benefit from your changes.
-
-                    TERMS AND CONDITIONS
-
-  0. Definitions.
-
-  "This License" refers to version 3 of the GNU General Public License.
-
-  "Copyright" also means copyright-like laws that apply to other kinds of
-works, such as semiconductor masks.
-
-  "The Program" refers to any copyrightable work licensed under this
-License.  Each licensee is addressed as "you".  "Licensees" and
-"recipients" may be individuals or organizations.
-
-  To "modify" a work means to copy from or adapt all or part of the work
-in a fashion requiring copyright permission, other than the making of an
-exact copy.  The resulting work is called a "modified version" of the
-earlier work or a work "based on" the earlier work.
-
-  A "covered work" means either the unmodified Program or a work based
-on the Program.
-
-  To "propagate" a work means to do anything with it that, without
-permission, would make you directly or secondarily liable for
-infringement under applicable copyright law, except executing it on a
-computer or modifying a private copy.  Propagation includes copying,
-distribution (with or without modification), making available to the
-public, and in some countries other activities as well.
-
-  To "convey" a work means any kind of propagation that enables other
-parties to make or receive copies.  Mere interaction with a user through
-a computer network, with no transfer of a copy, is not conveying.
-
-  An interactive user interface displays "Appropriate Legal Notices"
-to the extent that it includes a convenient and prominently visible
-feature that (1) displays an appropriate copyright notice, and (2)
-tells the user that there is no warranty for the work (except to the
-extent that warranties are provided), that licensees may convey the
-work under this License, and how to view a copy of this License.  If
-the interface presents a list of user commands or options, such as a
-menu, a prominent item in the list must meet this criterion.
-
-  1. Source Code.
-
-  The "source code" for a work means the preferred form of the work
-for making modifications to it.  "Object code" means any non-source
-form of a work.
-
-  A "Standard Interface" means an interface that either is an official
-standard defined by a recognized standards body, or, in the case of
-interfaces specified for a particular programming language, one that
-is widely used among developers working in that language.
-
-  The "System Libraries" of an executable work include anything, other
-than the work as a whole, that (a) is included in the normal form of
-packaging a Major Component, but which is not part of that Major
-Component, and (b) serves only to enable use of the work with that
-Major Component, or to implement a Standard Interface for which an
-implementation is available to the public in source code form.  A
-"Major Component", in this context, means a major essential component
-(kernel, window system, and so on) of the specific operating system
-(if any) on which the executable work runs, or a compiler used to
-produce the work, or an object code interpreter used to run it.
-
-  The "Corresponding Source" for a work in object code form means all
-the source code needed to generate, install, and (for an executable
-work) run the object code and to modify the work, including scripts to
-control those activities.  However, it does not include the work's
-System Libraries, or general-purpose tools or generally available free
-programs which are used unmodified in, but do not themselves form
-part of, the program.
-
-  2. Basic Permissions.
-
-  All rights granted under this License are granted for the term of
-copyright on the Program, and are irrevocable provided the stated
-conditions are met.  This License explicitly affirms your unlimited
-permission to run the unmodified Program.  The output from running a
-covered work is covered by this License only if the output, given its
-content, constitutes a covered work.  This License acknowledges your
-rights of fair use or other equivalent, as provided by copyright law.
-
-  You may make, run and convey covered works that you do not
-convey, without conditions as long as your license otherwise remains
-in force.  You may convey covered works to others for whatever purpose
-you wish, without conditions, so long as you meet the following conditions:
-
-    (a) You must give any other recipients of the Program or
-    works based on it a copy of this License; and
-
-    (b) You must cause any modified files to carry prominent notices
-    stating that you changed the files and the date of any change; and
-
-    (c) You must retain, in the source form of any work based on the
-    Program that you convey, any copyright, patent, trademark, and
-    attribution notices from the source form of the Program,
-    excluding those notices that do not pertain to any part of
-    the work; and
-
-    (d) If the work has an interactive user interface, each
-    version must display appropriate Legal Notices; however,
-    if the Program has interactive interfaces that do not
-    display Legal Notices, your work need not do so.
-
-  3. Protecting Users' Legal Rights From Anti-Circumvention Law.
-
-  No covered work shall be deemed part of an effective technological
-measure under any applicable law fulfilling obligations under article
-11 of the WIPO copyright treaty adopted on 20 December 1996, or
-similar laws prohibiting or restricting circumvention of such
-measures.
-
-  When you convey a covered work, you waive any legal power to forbid
-circumvention of technological measures to the extent such circumvention
-is effected by exercising rights under this License with respect to
-the covered work, and you disclaim any intention to limit operation or
-modification of the work as a means of enforcing, against the work's
-users, your or third parties' legal rights to forbid circumvention of
-technological measures.
-
-  4. Conveying Verbatim Copies.
-
-  You may convey verbatim copies of the Program's source code as you
-receive it, in any medium, provided that you conspicuously and
-appropriately publish on each copy an appropriate copyright notice;
-keep intact all notices stating that this License and any
-non-permissive terms added in accord with section 7 apply to the code;
-keep intact all notices of all copyright and license notices from the
-source form of the Program, excluding those notices that do not pertain
-to any part of the Program; and provide the complete corresponding
-source code under a copy of this License.
-
-  5. Conveying Modified Source Versions.
-
-  You may convey a work based on the Program, or the modifications to
-produce it from the Program, in the source code form, under the terms
-of section 4, provided that you also meet all of these conditions:
-
-    (a) The work must carry prominent notices stating that you modified
-    it, and giving a relevant date.
-
-    (b) The work must carry prominent notices stating that it is
-    released under this License and the conditions of this License.
-
-    (c) You must license the entire work, as a whole, under this
-    License to anyone who comes into possession of a copy.  This
-    License will therefore apply, along with any applicable section 7
-    additional terms, to the whole of the work, and all its parts,
-    regardless of how they are packaged.
-
-    (d) You must give a copy of this License with every copy of the
-    work you convey.
-
-    (e) You must not impose any further restrictions on the exercise of the
-    rights granted or affirmed under this License.
-
-  6. Conveying Non-Source Forms.
-
-  You may convey a covered work in object code form under the terms
-of sections 4 and 5, provided that you also convey the
-machine-readable Corresponding Source under the terms of this License,
-in one of these ways:
-
-    (a) Convey the object code in, or embodied in, a physical product
-    (including a physical distribution medium), accompanied by the
-    Corresponding Source fixed on a durable physical medium
-    customarily used for software interchange.
-
-    (b) Convey the object code in, or embodied in, a physical product
-    (including a physical distribution medium), accompanied by a
-    written offer, valid for at least three years and valid for as
-    long as you offer spare parts or customer support for that product
-    model, to give anyone who possesses the object code either (1) a
-    copy of the Corresponding Source for all the software in the
-    product that is covered by this License, on a durable physical
-    medium customarily used for software interchange, for a price no
-    more than your reasonable cost of physically performing this
-    conveying of source, or (2) access to copy the Corresponding
-    Source from a network server at no charge.
-
-    (c) Convey individual copies of the object code with a copy of the
-    written offer to provide the Corresponding Source.  This
-    alternative is allowed only occasionally and noncommercially, and
-    only if you received the object code with such an offer, in accord
-    with subsection 6b.
-
-    (d) Convey the object code by offering access from a designated
-    place (gratis or for a charge), and offer equivalent access to the
-    Corresponding Source in the same way through the same place at no
-    further charge.  You need not require recipients to copy the
-    Corresponding Source along with the object code.  If the place to
-    copy the object code is a network server, the Corresponding Source
-    may be on a different server (operated by you or a third party)
-    that supports equivalent copying facilities, provided you maintain
-    clear directions next to the object code saying where to find the
-    Corresponding Source.  Regardless of what server hosts the
-    Corresponding Source, you remain obligated to ensure that it is
-    available for as long as needed to satisfy these requirements.
-
-    (e) Convey the object code using peer-to-peer transmission, provided
-    you inform other peers where the object code and Corresponding
-    Source of the work are being offered to the general public at no
-    charge under subsection 6d.
-
-  7. Additional Terms.
-
-  "Additional permissions" are terms that supplement the terms of this
-License by making exceptions from one or more of its conditions.
-Additional permissions that are applicable to the entire Program shall
-be treated as though they were included in this License, to the extent
-that they are valid under applicable law.  If additional permissions
-apply only to part of the Program, that part may be used separately
-under those permissions, but the entire Program remains governed by
-this License without regard to the additional permissions.
-
-  When you convey a copy of a covered work, you may at your option
-remove any additional permissions from that copy, or from any part of
-it.  (Additional permissions may be written to require their own
-removal in certain cases when you modify the work.)  You may place
-additional permissions on material, added by you to a covered work,
-for which you have or can give appropriate copyright permission.
-
-  Notwithstanding any other provision of this License, for material you
-add to a covered work, you may (if authorized by the copyright holders of
-that material) supplement the terms of this License with terms:
-
-    (a) Disclaiming warranty or limiting liability differently from the
-    terms of sections 15 and 16 of this License; or
-
-    (b) Requiring preservation of specified reasonable legal notices or
-    author attributions in that material or in the Appropriate Legal
-    Notices displayed by works containing it; or
-
-    (c) Prohibiting misrepresentation of the origin of that material, or
-    requiring that modified versions of such material be marked in
-    reasonable ways as different from the original version; or
-
-    (d) Limiting the use for publicity purposes of names of licensors or
-    authors of the material; or
-
-    (e) Declining to grant rights under trademark law for use of some
-    trade names, trademarks, or service marks; or
-
-    (f) Requiring indemnification of licensors and authors of that
-    material by anyone who conveys the material or a modified version of
-    it.
-
-  Additional permissions may be subject to the GPL-3.0 terms.
-
-  8. Termination.
-
-  You may not propagate or modify a covered work except as expressly
-provided under this License.  Any attempt otherwise to propagate or
-modify it is void, and will automatically terminate your rights under
-this License (including any patent licenses granted under the third
-paragraph of section 11).
-
-  However, if you cease all violation of this License, then your
-license from a copyright holder is reinstated (a) provisionally,
-unless and until the copyright holder explicitly and finally
-terminates your license, and (b) permanently, if the copyright holder
-fails to notify you of the violation by some reasonable means prior to
-60 days after the cessation.
-
-  Moreover, your license from a copyright holder is reinstated permanently
-if the copyright holder notifies you of the violation by some reasonable
-means and you are the first to receive notification of a copyrighted
-violation applicable to this license after 60 days.
-
-  9. Acceptance Not Required for Having Copies.
-
-  You are not required to accept this License in order to receive or
-run a copy of the Program.  Ancillary propagation of a covered work
-occurring solely as a consequence of using peer-to-peer transmission
-to receive a copy likewise does not require acceptance.  However,
-nothing other than this License grants you permission to propagate or
-modify any covered work.  These actions infringe copyright if you do
-not accept this License.  Therefore, by modifying or conveying a
-covered work (or operating any platform based on it), you indicate
-your acceptance of this License to work with, and to propagate and
-modify it given your copies and sources.
-
-  10. Automatic Licensing of Downstream Recipients.
-
-  Each time you convey a covered work, the recipient automatically
-receives a license from the original licensors, to run, modify and
-propagate that work, subject to this License.  You are not responsible
-for enforcing compliance by third parties with this License.
-
-  11. Patents.
-
-  A "contributor" is a copyright holder who authorizes use under this
-License of the Program or a work on which the Program is based.  The
-work thus licensed is called the contributor's "contributor version".
-
-  A contributor's "essential patent claims" are all patent claims
-owned or controlled by the contributor, whether already acquired or
-hereafter acquired, that would be infringed by some manner, permitted
-by this License, of making, using, or selling its contributor version,
-but do not include claims that would be infringed only as a
-consequence of further modification of the contributor version.  For
-purposes of this definition, "control" includes the right to grant
-patent sublicenses in a manner consistent with the requirements of
-this License.
-
-  Each time you convey a covered work, the recipient automatically
-receives a license from the original licensors, to run, modify and
-propagate that work, subject to this License.  You are not responsible
-for enforcing compliance by third parties with this License.
-
-  12. Reciprocity.
-
-  If you convey a covered work, you must comply with both the terms of
-this License and any other applicable licenses.  If you impose any
-further restrictions on the exercise of the rights granted or affirmed
-under this License, you may lose your own rights to use the work.
-
-  13. Use with the GNU Affero General Public License.
-
-  Notwithstanding any other provision of this License, you have
-permission to link or combine any covered work with a work licensed
-under version 3 of the GNU Affero General Public License into a single
-combined work, and to convey the resulting work.  The terms of this
-License will continue to apply to the part which is the covered work,
-but the special requirements of the GNU Affero General Public License,
-version 3, shall apply to the combination as a whole.
-
-  14. Revised Versions of this License.
-
-  The Free Software Foundation may publish revised and/or new versions of
-the GNU General Public License from time to time.  Such new versions will
-be similar in spirit to the present version, but may differ in detail to
-address new problems or concerns.
-
-  Each version is given a distinguishing version number.  If the
-Program specifies that a certain numbered version of the GNU General
-Public License "or any later version" applies to it, you have the
-option of following the terms and conditions either of that numbered
-version or of any later version published by the Free Software
-Foundation.  If the Program does not specify a version number of the
-GNU General Public License, you may choose any version ever published
-by the Free Software Foundation.
-
-  If the Program specifies that a proxy can decide which future
-versions of the GNU General Public License can be used, that proxy's
-public statement of acceptance of a version permanently authorizes you
-to choose that version for the Program.
-
-  Later license versions may give you additional or different
-permissions.  However, additional permissions cannot be imposed on
-you by any version of this License, and you may not accept any
-additional permissions imposed by any version of this License.
-
-  15. Disclaimer of Warranty.
-
-  THERE IS NO WARRANTY FOR THE PROGRAM, TO THE EXTENT PERMITTED BY
-APPLICABLE LAW.  EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT
-HOLDERS AND/OR OTHER PARTIES PROVIDE THE PROGRAM "AS IS" WITHOUT WARRANTY
-OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO,
-THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
-PURPOSE.  THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM
-IS WITH YOU.  SHOULD THE PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF
-ALL NECESSARY SERVICING, REPAIR OR CORRECTION.
-
-  16. Limitation of Liability.
-
-  IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW OR AGREED TO IN WRITING
-WILL ANY COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MODIFIES AND/OR CONVEYS
-THE PROGRAM AS PERMITTED ABOVE, BE LIABLE TO YOU FOR DAMAGES, INCLUDING ANY
-GENERAL, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THE
-USE OR INABILITY TO USE THE PROGRAM (INCLUDING BUT NOT LIMITED TO LOSS OF
-DATA OR DATA BEING RENDERED INACCURATE OR LOSSES SUSTAINED BY YOU OR THIRD
-PARTIES OR A FAILURE OF THE PROGRAM TO OPERATE WITH ANY OTHER PROGRAMS),
-EVEN IF SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE POSSIBILITY OF
-SUCH DAMAGES.
-
-  17. Interpretation of Sections 15 and 16.
-
-  If the disclaimer of warranty and limitation of liability provided
-above cannot be given local legal effect according to their terms,
-reviewing courts shall apply local law that most closely approximates
-an absolute waiver of all civil liability in connection with the
-Program, unless a warranty or assumption of liability accompanies a
-copy of the Program in return for a fee.
-
-END OF TERMS AND CONDITIONS
-
-Copyright (c) 2026 github-novel-serialization-skill contributors
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
-```
-
-
-### 7.5 `CODE_OF_CONDUCT.md` [Description Only]
-
-Use the [Contributor Covenant v2.1](https://www.contributor-covenant.org/version/2/1/code_of_conduct/) template. Fill in:
-- Project name: `github-novel-serialization-skill`
-- Contact email: `[INSERT_CONTACT_EMAIL]`
-
-### 7.6 `CONTRIBUTING.md` [Description Only]
-
-Must cover:
-- How to report bugs (link to issue template)
-- How to suggest features (link to feature request template)
-- How to submit PRs (branch naming, commit format, review process)
-- Development setup
-- Code style (Markdown linting rules)
-- Module contribution guidelines (how to add a new module)
-- Recognition policy
-
-### 7.7 `SECURITY.md` [Description Only]
-
-Must cover:
-- Supported versions
-- How to report a vulnerability (email or GitHub private advisory)
-- Response timeline expectations
-- Disclosure policy
-
-### 7.8 `CHANGELOG.md` [Full Content]
-
-Use [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) format. The project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
-
-Template:
-
-```markdown
-# Changelog
-
-All notable changes to this project will be documented in this file.
-
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
-
-## [Unreleased]
-
-### Added
-- Initial project structure
-
-### Changed
-- Changes to existing functionality
-
-### Deprecated
-- Soon-to-be removed functionality
-
-### Removed
-- Removed functionality
-
-### Fixed
-- Bug fixes
-
-### Security
-- Vulnerability fixes
-```
-
-### 7.9 `.github/ISSUE_TEMPLATE/bug-report.yml` [Full Content]
-
-```yaml
-name: Bug Report
-description: File a bug report
-title: "[Bug]: "
-labels: ["bug"]
-assignees:
-  - octocat
-body:
-  - type: markdown
-    attributes:
-      value: |
-        Thanks for taking the time to fill out this bug report!
-  - type: textarea
-    id: bug-description
-    attributes:
-      label: Bug Description
-      description: A clear and concise description of what the bug is.
-      placeholder: Describe the bug...
-    validations:
-      required: true
-  - type: textarea
-    id: steps-to-reproduce
-    attributes:
-      label: Steps to Reproduce
-      description: Steps to reproduce the behavior.
-      placeholder: |
-        1. Go to '...'
-        2. Click on '....'
-        3. Scroll down to '....'
-        4. See error
-    validations:
-      required: true
-  - type: textarea
-    id: expected-behavior
-    attributes:
-      label: Expected Behavior
-      description: A clear and concise description of what you expected to happen.
-    validations:
-      required: true
-  - type: textarea
-    id: actual-behavior
-    attributes:
-      label: Actual Behavior
-      description: A clear and concise description of what actually happened.
-    validations:
-      required: true
-  - type: input
-    id: environment
-    attributes:
-      label: Environment
-      description: AI tool, model, and version used.
-      placeholder: "e.g., Claude Code v1.0, Claude 3 Opus, macOS 14"
-  - type: textarea
-    id: screenshots
-    attributes:
-      label: Screenshots / Logs
-      description: If applicable, add screenshots or logs to help explain your problem.
-```
-
-### 7.10 `.github/ISSUE_TEMPLATE/feature-request.yml` [Full Content]
-
-```yaml
-name: Feature Request
-description: Suggest an idea for this project
-title: "[Feature]: "
-labels: ["enhancement"]
-assignees:
-  - octocat
-body:
-  - type: markdown
-    attributes:
-      value: |
-        Thanks for suggesting a feature request!
-  - type: textarea
-    id: problem-statement
-    attributes:
-      label: Problem Statement
-      description: Is your feature request related to a problem? Please describe.
-      placeholder: A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]
-    validations:
-      required: true
-  - type: textarea
-    id: proposed-solution
-    attributes:
-      label: Proposed Solution
-      description: Describe the solution you'd like.
-      placeholder: A clear and concise description of what you want to happen.
-    validations:
-      required: true
-  - type: textarea
-    id: alternatives
-    attributes:
-      label: Alternatives Considered
-      description: Describe alternatives you've considered.
-      placeholder: A clear and concise description of any alternative solutions or features you've considered.
-  - type: input
-    id: module-affected
-    attributes:
-      label: Module Affected
-      description: Which module(s) does this feature affect?
-      placeholder: "e.g., modules/worldbuilding/, modules/chapter-writing/"
-```
-
-### 7.11 `.github/ISSUE_TEMPLATE/config.yml` [Full Content]
-
-```yaml
-blank_issues_enabled: false
-contact_links:
-  - name: Questions & Discussions
-    url: https://github.com/[OWNER]/[REPO]/discussions
-    about: Ask questions and discuss ideas
-```
-
-### 7.12 `.github/PULL_REQUEST_TEMPLATE.md` [Description Only]
-
-Must include:
-- Description of changes
-- Which module(s) affected
-- Checklist: tests, docs, CHANGELOG updated, no breaking changes
-- Harness compliance confirmation
-- License compliance confirmation
-
-> **Template Content:**
->
-> ```markdown
-> ## Description of Changes
->
-> <!-- Describe the changes you made -->
->
-> ## Affected Module(s)
->
-> <!-- Which module(s) does this PR affect? -->
-> - [ ] modules/worldbuilding/
-> - [ ] modules/character-design/
-> - [ ] modules/chapter-writing/
-> - [ ] modules/continuity-check/
-> - [ ] modules/publishing-workflow/
-> - [ ] modules/continuity-tracker/
-> - [ ] references/
-> - [ ] prompts/
-> - [ ] Other (please specify)
->
-> ## Checklist
->
-> - [ ] I have read the CONTRIBUTING.md guide
-> - [ ] My changes follow the coding style guidelines
-> - [ ] I have updated documentation where needed
-> - [ ] I have updated CHANGELOG.md
-> - [ ] My changes do not introduce breaking changes
-> - [ ] I have added tests to cover my changes (if applicable)
-> - [ ] All existing tests pass
-> - [ ] License files are up to date (GPL-3.0 in LICENSE, CC BY-NC-SA 4.0 in LICENSES/)
->
-> ## Harness Compliance Confirmation
->
-> - [ ] Constraint before generation: Rules are defined before workflow steps
-> - [ ] Structured memory: State is persisted in structured files
-> - [ ] Verification gates: Checks are in place before publish
-> - [ ] Modular decomposition: No circular dependencies
-> - [ ] Feedback loops: Structured feedback mechanism exists
-> - [ ] Progressive disclosure: Content is layered appropriately
-> - [ ] Context budget management: Files are under line limits
-> - [ ] Human-in-the-loop: Manual oversight steps are present
-> - [ ] Error recovery: State snapshots are maintained
-> - [ ] Role isolation: Each module has single responsibility
-> - [ ] License compliance: GPL-3.0 and CC BY-NC-SA 4.0 headers present where required
->
-> ## Related Issues
->
-> <!-- Link to related issues -->
-> Closes #
-> ```
-
-### 7.13 `.github/FUNDING.yml` [Full Content]
-
-```yaml
-# Replace with your funding information
-github: [YOUR_GITHUB_USERNAME]
-```
-
-### 7.14 `.github/dependabot.yml` [Full Content]
-
-```yaml
-version: 2
-updates:
-  - package-ecosystem: "github-actions"
-    directory: "/"
-    schedule:
-      interval: "weekly"
-  - package-ecosystem: "pip"
-    directory: "/"
-    schedule:
-      interval: "weekly"
-```
-
-### 7.15 `.github/workflows/novel-release.yml` [Full Content]
-
-A GitHub Actions workflow template for automated chapter release.
-
-```yaml
-name: Novel Release
-
-on:
-  push:
-    tags:
-      - 'v*'
-      - 'chapter-*'
-
-permissions:
-  contents: write
-  packages: write
-
-jobs:
-  release:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Validate Chapter Format
-        run: |
-          echo "Validating chapter file format..."
-          # Check that chapter files follow naming convention: ch-{number}-{title}.md
-          find chapters/ -name 'ch-*' -type f | while read -r file; do
-            if [[ ! "$file" =~ ^chapters/ch-[0-9]+-.*\.md$ ]]; do
-              echo "ERROR: Invalid chapter file format: $file"
-              exit 1
-            fi
-          done
-          echo "Chapter format validation passed."
-
-      - name: Verify License Compliance
-        run: |
-          echo "Verifying license compliance..."
-          # Check LICENSE file exists and contains GPL-3.0
-          if [ ! -f LICENSE ]; then
-            echo "ERROR: LICENSE file not found"
-            exit 1
-          fi
-          if ! grep -q "GNU GENERAL PUBLIC LICENSE" LICENSE; then
-            echo "ERROR: LICENSE file does not contain GPL-3.0 text"
-            exit 1
-          fi
-          # Check LICENSES directory for CC BY-NC-SA 4.0
-          if [ ! -d LICENSES ]; then
-            echo "ERROR: LICENSES directory not found"
-            exit 1
-          fi
-          if [ ! -f LICENSES/CC-BY-NC-SA-4.0.txt ]; then
-            echo "ERROR: LICENSES/CC-BY-NC-SA-4.0.txt not found"
-            exit 1
-          fi
-          echo "License compliance verification passed."
-
-      - name: Run Continuity Check
-        run: |
-          echo "Running continuity verification..."
-          # Run the continuity check module
-          if [ -f modules/continuity-check/MODULE.md ]; then
-            echo "Continuity check module found."
-          else
-            echo "WARNING: Continuity check module not found."
-          fi
-
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
-        with:
-          generate_release_notes: true
-          files: |
-            chapters/*.md
-            SKILL.md
-            README.md
-
-      - name: Generate Release Notes
-        run: |
-          echo "Generating release notes..."
-          TAG_NAME=${{ github.ref_name }}
-          echo "Release tag: $TAG_NAME"
-          # Extract changelog entries for this version
-          if [ -f CHANGELOG.md ]; then
-            echo "CHANGELOG entries for $TAG_NAME:"
-            sed -n "/## \\[$TAG_NAME\\]/,/## \\[/p" CHANGELOG.md | head -n -1
-          fi
-```
-
-
----
-
-## 8. File Size & Splitting Rules
-
-### 8.1 Hard Limit
+### 7.1 Hard Limit
 
 **No single file shall exceed 500 lines.** This applies to:
 - SKILL.md (root and all modules)
@@ -1362,9 +412,9 @@ jobs:
 - prompts/*.md
 - Any other Markdown file in the project
 
-> **Exception**: `README_FOR_AI.md` (this document) is a meta-instruction/seed file and is exempt from the 500-line limit, as it serves as the authoritative generation specification.
+> **Exception**: `README_FOR_AI.md` (this document) is the project's master specification (the "S" in SDD) and is exempt from the 500-line limit, as it consolidates the specification-driven development direction and the development-plan schema for the transmedia pipeline.
 
-### 8.2 Splitting Protocol
+### 7.2 Splitting Protocol
 
 When a file approaches 500 lines:
 1. Identify logical section boundaries
@@ -1372,7 +422,7 @@ When a file approaches 500 lines:
 3. Replace the extracted section with a one-line pointer: `See [filename](filepath) for details.`
 4. Update all cross-references
 
-### 8.3 Split Example
+### 7.3 Split Example
 
 If `method-patterns.md` exceeds 500 lines:
 
@@ -1404,7 +454,7 @@ This file is an index. Detailed templates are split into sub-modules.
 
 ---
 
-## 9. Versioning Strategy
+## 8. Versioning Strategy
 
 The project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html):
 
@@ -1416,7 +466,7 @@ Version tags follow the format `v{major}.{minor}.{patch}` (e.g., `v1.2.3`).
 
 ---
 
-## 10. Quality Assurance Checklist
+## 9. Quality Assurance Checklist
 
 Before finalizing the generated project, verify:
 
@@ -1428,7 +478,7 @@ Before finalizing the generated project, verify:
 - [ ] `prompts/` files include `{{OUTPUT_LANGUAGE}}` placeholder
 - [ ] All module SKILL.md files have valid YAML frontmatter
 - [ ] All module SKILL.md files are ≤500 lines
-- [ ] No file exceeds 500 lines (see Section 8.1 for exceptions)
+- [ ] No file exceeds 500 lines (see Section 7.1 for exceptions)
 - [ ] All GitHub standard files are present and properly formatted
 - [ ] Cross-references between files are valid
 - [ ] `{{OUTPUT_LANGUAGE}}` instruction appears in SKILL.md, all prompts, and all module SKILLs (see Section 0.3 for authoritative declaration)
@@ -1444,7 +494,7 @@ Before finalizing the generated project, verify:
 
 ---
 
-## 11. Automated Verification
+## 10. Automated Verification
 
 To ensure generated projects meet all requirements, run the following verification steps:
 
@@ -1460,29 +510,7 @@ To ensure generated projects meet all requirements, run the following verificati
 
 ---
 
-## 12. Generation Sequence
-
-> **IMPORTANT**: `README_FOR_AI.md` (this file) is the **seed file**. It must be created first as the authoritative specification. All other files are generated based on its instructions.
-
-Execute file generation in this order to maintain referential integrity:
-
-1. `README_FOR_AI.md` — **seed file (already created)**
-2. `references/method-patterns.md` (and split modules) — templates first
-3. `references/glossary.md` — terminology
-4. `references/examples/*` — worked examples
-5. `modules/*/MODULE.md` — module contracts referencing templates (never `SKILL.md`)
-6. `SKILL.md` — root index referencing modules and references
-7. `prompts/README.md` — usage guide
-8. `prompts/01-implement-method.md` — implementation prompt
-9. `prompts/02-robustness-checks.md` — validation prompt
-10. `README.md` — project overview
-11. `.gitignore`, `.editorconfig`, `LICENSE`, `LICENSES/CC-BY-NC-SA-4.0.txt`, `.github/dependabot.yml`
-12. `CODE_OF_CONDUCT.md`, `CONTRIBUTING.md`, `SECURITY.md`, `CHANGELOG.md`
-13. `.github/` community files (issue templates, PR template, FUNDING, workflows)
-
----
-
-## 13. Anti-Patterns — What NOT To Do
+## 11. Anti-Patterns — What NOT To Do
 
 | Anti-Pattern | Why It's Wrong | Correct Approach |
 |-------------|---------------|-----------------|
@@ -1500,7 +528,7 @@ Execute file generation in this order to maintain referential integrity:
 
 ---
 
-## 14. Final Note
+## 12. Final Note
 
 This Skill project is not just a collection of prompts. It is a **harness-engineered system** that transforms a raw LLM into a reliable, stateful, multi-session novel-writing agent. Every file exists to constrain, guide, and verify. The goal is deterministic quality — not lucky outputs.
 
@@ -1510,42 +538,193 @@ This Skill project is not just a collection of prompts. It is a **harness-engine
 
 Generate all files now. Follow every specification above. Do not improvise structure.
 
-## 15. Agile Development Lifecycle — SDD + ATDD with Phase-Gated Review
+## 13. Agile Development Lifecycle — SDD + ATDD with Phase-Gated Review
 
 This skill applies two agile practices to any multi-stage generation effort,
 including the optional transmedia pipeline (novel -> script/storyboard -> comic
 -> animation -> film). They are specified in `docs/adr/0005-engineering-sdd-atdd.md`
 and the project plan `docs/multimedia-pipeline-plan.md`.
 
-### 15.1 Specification-Driven Development (SDD)
+### 13.1 Specification-Driven Development (SDD)
 
 Every task phase begins with a written specification before any content or code
 is generated. The spec defines inputs, outputs, and acceptance criteria. The
 spec is the contract; generation follows it.
 
-### 15.2 Acceptance Test-Driven Development (ATDD)
+### 13.2 Acceptance Test-Driven Development (ATDD)
 
 Before implementation, each phase declares executable acceptance tests. A phase
 is "done" only when its acceptance tests pass. Tests are checked mechanically
 where possible (for example `scan_hygiene`, `check_refs`, consistency scripts)
 and by checklist where not.
 
-### 15.3 Phase-Gated Review (stop and wait)
+### 13.3 Phase-Gated Review (stop and wait)
 
 After a phase's acceptance tests pass, the pipeline STOPS and waits for explicit
 human review and sign-off. It does NOT auto-advance to the next phase. This
-extends the existing three-stage review (三审) and verification gates: the gate
+extends the existing three-stage review and verification gates: the gate
 is a hard stop, not a soft checkpoint.
 
-### 15.4 Branch strategy for multi-stage work
+### 13.4 Branch strategy for multi-stage work
 
 - One `feat/pipeline-{stage}` branch per stage.
 - `main` is protected; a stage merges only after its gate sign-off.
 - The novel's continuity state (`state/`) remains the single source of truth
   consumed by every downstream stage.
 
-### 15.5 Lifecycle loop
+### 13.5 Lifecycle loop
 
 ```
 Spec (SDD) -> Acceptance Tests (ATDD) -> Implement -> Run Tests -> STOP: human gate -> (approve -> next stage | reject -> fix/rework)
 ```
+
+## 14. Transmedia Pipeline Specification Direction (SDD Specification Hub)
+
+> **Role**: This file (`README_FOR_AI.md`) is the project's master specification — the "S" (Specification) in SDD — authorized by `docs/adr/0005-engineering-sdd-atdd.md`. This chapter is the specification hub: it defines the specification-driven development direction for the transmedia pipeline — novel → script → storyboard → comic → animation → film.
+
+> **How to use**: This chapter inlines a concise skeleton for each stage (goal / inputs / outputs / acceptance criteria / generation method) so the project can be developed zero-from-scratch, phase by phase, from this document alone. The full executable specs live in the `specs/` directory (each file ≤500 lines, per Section 7). A concrete roadmap instance is in `docs/multimedia-pipeline-plan.md` (declared `conforms to` this Section 14). All stages follow the SDD + ATDD + gate lifecycle in Section 13.
+
+### 14.1 Novel (baseline — already built, single source of truth)
+- **Goal**: High-quality, continuity-controlled long-form web novel — the core capability of this repository.
+- **Inputs**: Author intent, world-building, character design.
+- **Outputs**: Chapter drafts, character sheets, world-building docs, continuity state (`state/`).
+- **Acceptance**: Passes three-stage review + `check_refs` / `scan_hygiene`; zero continuity conflicts.
+- **Generation method**: Existing novel skill flow (worldbuilding → character-design → chapter-writing → continuity-check → publishing-workflow).
+- **Detailed spec**: `specs/01-novel.md`.
+- **Transmedia position**: Downstream script / storyboard / comic / animation / film all consume `state/`; no separate state is introduced.
+
+### 14.2 Script
+- **Goal**: Adapt novel chapters into shootable scripts (scenes, dialogue, action, beats).
+- **Inputs**: Novel chapters + continuity state.
+- **Outputs**: Per-chapter beat sheet + structured script.
+- **Acceptance**: A beat sheet produced per chapter; passes existing text reviews (humanizer / continuity / punctuation); character motivation consistent with the novel.
+- **Generation method**: Chapter → beat sheet → script draft → text review → human gate.
+- **Detailed spec**: `specs/02-script.md`.
+
+### 14.3 Storyboard
+- **Goal**: Turn the script into shot specifications (shot size / camera / duration / visual description / dialogue).
+- **Inputs**: Script + novel state.
+- **Outputs**: Storyboard table (structured JSON: shot no., shot size, camera, duration, visual, dialogue).
+- **Acceptance**: Storyboard covers every script scene; shot-duration budget is shootable; consistent with character/style.
+- **Generation method**: Script → storyboard spec → consistency check → human gate.
+- **Detailed spec**: `specs/03-storyboard.md`.
+
+### 14.4 Comic
+- **Goal**: Render the storyboard into sequential art panels, locking character and style.
+- **Inputs**: Storyboard + character/style guide derived from novel state.
+- **Outputs**: Comic panels (images) + asset naming.
+- **Acceptance**: Character-face / style consistency check script passes; panels conform to spec.
+- **Generation method**: Lock character/style → render panels → visual consistency review → human gate.
+- **Detailed spec**: `specs/04-comic.md`.
+- **Tool maturity**: Medium; the consistency script is a key go/no-go gate.
+
+### 14.5 Animation
+- **Goal**: Animate the storyboard + comic assets into a sample reel.
+- **Inputs**: Storyboard + comic assets.
+- **Outputs**: Animation clips (video).
+- **Acceptance**: Sample reel passes visual-consistency + pacing checks; asset reuse rate meets target.
+- **Generation method**: Shot-animation spec → render → pacing/consistency review → human gate (go/no-go).
+- **Detailed spec**: `specs/05-animation.md`.
+- **Tool maturity**: Medium-low; large cost/quality gap — state it honestly.
+
+### 14.6 Film
+- **Goal**: Edit animation clips into a finished film (dubbing / score / post / A-V sync).
+- **Inputs**: Animation clips.
+- **Outputs**: Finished film.
+- **Acceptance**: Finished film passes duration / structure / A-V-sync checks.
+- **Generation method**: Edit script → dubbing/score → post → A-V-sync review → human final gate (go/no-go).
+- **Detailed spec**: `specs/06-film.md`.
+- **Tool maturity**: Low; least mature tooling, highest risk — may be halted at any time.
+
+### 14.7 Governance & Asset Conventions (Stage 0)
+- **Branches**: One `feat/pipeline-{stage}` branch per stage; `main` is protected and merges only after gate sign-off.
+- **Asset directory**: `assets/{stage}/` (script / storyboard / comic / animation / film).
+- **Cost ceiling**: A cost cap per stage; exceeding it triggers a go/no-go gate decision.
+- **Detailed spec**: `specs/00-governance.md`.
+
+### 14.8 Conventions for zero-from-scratch development using README alone
+- This hub chapter (Section 14) + the existing Sections 0–13 (novel skill, SDD/ATDD, gates) + `specs/` form a complete specification; `docs/multimedia-pipeline-plan.md` is one concrete roadmap instance. The format of every plan document is governed by the Plan Schema in Section 15; each plan document MUST declare `Conforms to: README_FOR_AI.md §15` (and §14 for pipeline work).
+- Every stage follows the Section 13 lifecycle: `Spec (SDD) → Acceptance Tests (ATDD) → Implement → Run Tests → STOP: human gate → (approve → next stage | reject → fix/rework)`.
+- Downstream stages MUST consume upstream facts within `state/` and must not introduce separate state.
+- Stages with immature tooling (comic / animation / film) state gaps honestly; the gate decides go/no-go. If a stage fails its gate with no acceptable fix → halt that stage and all subsequent ones, preserve assets, and do not pollute `main`.
+
+## 15. Development Plan Specification (Plan Schema)
+
+> **Role**: Defines the normative schema for any development-plan document in this project. A concrete instance is `docs/multimedia-pipeline-plan.md`. A plan document makes the Section 13 lifecycle executable: it binds the Section 14 specification direction to a sequenced set of gated stages with explicit acceptance tests. With this schema, the project can be planned and built from `README_FOR_AI.md` alone, without copying the repository.
+
+### 15.1 Relationship to other sections
+- Section 13 defines the lifecycle (SDD + ATDD + phase-gated review).
+- Section 14 defines per-stage specification direction (the "what" to build).
+- This Section 15 defines the plan-document format (the "how to write the plan").
+- Every plan document MUST open with a `Conforms to` declaration referencing this Section 15, and — for pipeline work — Section 14.
+
+### 15.2 Plan document metadata
+Each plan document begins with a metadata block identifying it and its conformance:
+
+```yaml
+plan:
+  id: <short-id>                  # e.g. multimedia-pipeline
+  title: <human-readable title>
+  conforms_to:
+    - "README_FOR_AI.md §15"      # plan schema (mandatory)
+    - "README_FOR_AI.md §14"      # pipeline direction (if pipeline work)
+  status: draft | active | done
+  created: <YYYY-MM-DD>
+  owner: <role or person>
+  cost_ceiling: <amount | "TBD">
+```
+
+If YAML is unsuitable, use a Markdown table; the required fields are `id`, `conforms_to`, and `status`.
+
+### 15.3 Stage block schema
+A plan is an ordered list of stages. Each stage block MUST contain:
+
+- **Stage id / name** — e.g. `S1-novel`.
+- **Goal** — one sentence, mirroring the matching Section 14.{n} Goal.
+- **Inputs / Outputs** — concrete artifacts (files, `assets/{stage}/`, `state/`).
+- **Specification pointer** — the Section 14.{n} entry or `specs/*.md` file that defines the stage. If neither exists, the plan MUST first create the spec (SDD: spec before implementation).
+- **Acceptance tests (ATDD)** — explicit, checkable list. Prefer mechanical checks (`scan_hygiene`, `check_refs`, consistency scripts) with pass criteria; fall back to checklists.
+- **Gate** — explicit human review / stop point; record sign-off (approve / reject) and date.
+- **Cost / risk note** — tool maturity and go/no-go triggers, especially for comic / animation / film (see §14.4–§14.6).
+
+### 15.4 Acceptance-test block format
+
+```
+- [ ] <test-id> <description>            (mechanical | checklist)
+    pass criterion: <observable condition>
+    tool: <script or checklist name> | manual
+```
+
+A stage is "done" only when every mechanical test passes, every checklist item is verified, and the gate (§13.3) is signed off.
+
+### 15.5 Halt and rollback rule
+If a stage fails its gate with no acceptable fix, the plan MUST state: halt that stage and all downstream dependent stages, preserve produced assets, do not merge to `main`, and open a remediation or close-out record. This mirrors §14.8.
+
+### 15.6 Condensed example (instantiate from README alone)
+A minimal plan that demonstrates the schema:
+
+```markdown
+# Plan: Transmedia Pipeline (mini)
+
+Conforms to: README_FOR_AI.md §15, §14
+
+plan:
+  id: multimedia-pipeline
+  status: active
+
+## S1 — Novel (baseline)
+Goal: continuity-controlled web novel (§14.1).
+Inputs: author intent. Outputs: chapters + state/.
+Spec: specs/01-novel.md.
+Acceptance:
+  - [ ] AT1 scan_hygiene clean          (mechanical) tool: scripts/scan_hygiene.py
+  - [ ] AT2 check_refs no broken refs   (mechanical) tool: scripts/check_refs.py
+  - [ ] AT3 three-stage review sign-off (checklist)
+Gate: STOP — human sign-off before S2.
+
+## S2 — Script
+Goal: adapt chapters into scripts (§14.2).
+...
+```
+
+This shows that, using §14 direction plus the §15 schema, a complete plan can be drafted from `README_FOR_AI.md` without copying the repository.

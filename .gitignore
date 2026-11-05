@@ -70,3 +70,9 @@ logs/
 README_FOR_AI_Audit_Report*
 docs/engineering-hygiene-assessment.md
 docs/multimedia-pipeline-assessment.md
+docs/readme-planning-driven-assessment.md
+docs/readme-as-sdd-spec-assessment.md
+docs/readme-retire-seed-hub-assessment.md
+
+# Local backups / historical content (seed backup, not for GitHub)
+backups/

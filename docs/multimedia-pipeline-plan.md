@@ -1,67 +1,85 @@
-# 多媒体制作管线项目计划
+# Multimedia Production Pipeline — Project Plan
 
-依据：本地评估报告（按 ADR-0001 不入库）的结论——分阶段、闸门式、SDD + ATDD；
-小说连续性状态为跨媒体唯一事实源；文本阶段先行，后置阶段可随时中止。
+Basis: conclusions of the local engineering assessment report (not committed to the
+repository per ADR-0001) — phased, gate-driven, SDD + ATDD; the novel's continuity
+state is the single source of truth across media; text stages go first, later stages
+may be halted at any time.
 
-敏捷方法论规范见 `README_FOR_AI.md` §15 与 `docs/adr/0005-engineering-sdd-atdd.md`。
+Agile methodology is specified in `README_FOR_AI.md` §13 and
+`docs/adr/0005-engineering-sdd-atdd.md`.
 
-## 1. 核心原则
+This plan document declares `conforms to` `README_FOR_AI.md` §14 (specification hub)
+and §15 (plan schema).
 
-- **SDD（规范驱动）**：每阶段先写规范（输入 / 输出 / 接受准则），再生成；规范是契约，生成服从规范。
-- **ATDD（验收测试驱动）**：每阶段先定义可执行验收测试；实现以"测试通过"为完成标准。
-- **阶段闸门（Phase Gate）**：验收测试通过后，**停下等待人工评审签字**，方可进入下一阶段；禁止自动推进。
-- **唯一事实源**：小说连续性状态（`state/`）被每阶段消费，下游不另起状态。
+## 1. Core Principles
 
-## 2. 阶段设计
+- **SDD (Specification-Driven)**: each stage writes its spec (inputs / outputs /
+  acceptance criteria) before generation; the spec is the contract, generation obeys it.
+- **ATDD (Acceptance-Test-Driven)**: each stage defines executable acceptance tests
+  first; implementation is "done" only when tests pass.
+- **Phase Gate**: after acceptance tests pass, STOP and wait for human review sign-off
+  before the next stage; never auto-advance.
+- **Single Source of Truth**: the novel's continuity state (`state/`) is consumed by
+  every stage; downstream stages introduce no separate state.
 
-### 阶段 0 — 规划与治理
-- **SDD**：分支策略、模块/子项目边界、资产目录约定（`assets/{stage}/`）、成本门限。
-- **ATDD**：仓库通过 `scan_hygiene` + `check_refs`；新增管线目录结构通过脚手架校验。
-- **闸门**：ADR 与分支策略评审通过。
-- 分支：`feat/pipeline-governance` ｜ 产出：`docs/adr/0005-engineering-sdd-atdd.md`、目录骨架。
+## 2. Stage Design
 
-### 阶段 1 — 剧本与分镜（文本）
-- 输入：小说章节 + 连续性状态。
-- **SDD**：每章 → 剧本节拍表；分镜 = 镜头规格（景别 / 机位 / 时长 / 画面描述 / 对白）。
-- **ATDD**：每章产出 beat sheet + storyboard（结构化 JSON）；通过既有文本审查（humanizer / continuity / punctuation）。
-- **闸门**：人工评审剧本与分镜。
-- 分支：`feat/pipeline-script-storyboard`。
+### Stage 0 — Planning & Governance
+- **SDD**: branch strategy, module/subproject boundaries, asset directory convention
+  (`assets/{stage}/`), cost ceiling.
+- **ATDD**: repository passes `scan_hygiene` + `check_refs`; new pipeline directory
+  structure passes scaffolding check.
+- **Gate**: ADR and branch strategy review pass.
+- Branch: `feat/pipeline-governance` | Outputs: `docs/adr/0005-engineering-sdd-atdd.md`,
+  directory skeleton.
 
-### 阶段 2 — 漫画
-- 输入：分镜 + 由小说状态派生的角色/风格指南。
-- **SDD**：角色一致性规范、风格锁、面板渲染规格、资产命名。
-- **ATDD**：角色人脸/风格一致性检查脚本通过；面板产出符合规格。
-- **闸门**：人工评审视觉一致性。
-- 分支：`feat/pipeline-comic`。
+### Stage 1 — Script & Storyboard (text)
+- Inputs: novel chapters + continuity state.
+- **SDD**: per chapter → script beat sheet; storyboard = shot spec (shot size / camera /
+  duration / visual description / dialogue).
+- **ATDD**: per chapter produce beat sheet + storyboard (structured JSON); pass existing
+  text reviews (humanizer / continuity / punctuation).
+- **Gate**: human review of script and storyboard.
+- Branch: `feat/pipeline-script-storyboard`.
 
-### 阶段 3 — 动画
-- 输入：分镜 + 漫画资产。
-- **SDD**：镜头动画规格、时长/节奏、资产复用、渲染参数。
-- **ATDD**：样片通过视觉一致性 + 节奏检查。
-- **闸门**：人工评审（go/no-go）。
-- 分支：`feat/pipeline-animation`。
+### Stage 2 — Comic
+- Inputs: storyboard + character/style guide derived from novel state.
+- **SDD**: character-consistency spec, style lock, panel-render spec, asset naming.
+- **ATDD**: character-face / style-consistency check script passes; panels conform to spec.
+- **Gate**: human review of visual consistency.
+- Branch: `feat/pipeline-comic`.
 
-### 阶段 4 — 电影
-- 输入：动画片段。
-- **SDD**：剪辑脚本、配音/配乐、后期、音画同步规格。
-- **ATDD**：成片通过时长/结构/音画同步检查。
-- **闸门**：人工终审（go/no-go）。
-- 分支：`feat/pipeline-movie`。
+### Stage 3 — Animation
+- Inputs: storyboard + comic assets.
+- **SDD**: shot-animation spec, duration/pacing, asset reuse, render parameters.
+- **ATDD**: sample reel passes visual-consistency + pacing checks.
+- **Gate**: human review (go/no-go).
+- Branch: `feat/pipeline-animation`.
 
-## 3. 与既有流程的对齐
+### Stage 4 — Film
+- Inputs: animation clips.
+- **SDD**: edit script, dubbing/score, post, A-V sync spec.
+- **ATDD**: finished film passes duration/structure/A-V-sync checks.
+- **Gate**: human final review (go/no-go).
+- Branch: `feat/pipeline-movie`.
 
-- 文本阶段复用**三审制度**与验证闸门作为质量闸。
-- 每阶段闸门 = 既有"终审签字"的扩展：**停止并等待**，而非软检查点。
-- `README_FOR_AI.md` §15 定义 SDD + ATDD + 闸门式生命周期，是本计划的规范依据。
-- 每个 `feat/pipeline-{stage}` 分支在闸门签字后才合并 `main`。
+## 3. Alignment with Existing Process
 
-## 4. 退出准则
+- Text stages reuse the existing three-stage review and verification gates as quality gates.
+- Each stage gate = extension of the existing "final-review sign-off": STOP and wait,
+  not a soft checkpoint.
+- `README_FOR_AI.md` §13 defines the SDD + ATDD + gate lifecycle and is the normative
+  basis of this plan.
+- Each `feat/pipeline-{stage}` branch merges to `main` only after gate sign-off.
 
-任一阶段未在闸门处通过且无可接受的修复方案 → **中止该阶段及后续**，保留已产出资产，不污染 `main`。
+## 4. Exit Criteria
 
-## 5. 生命周期循环
+If any stage fails its gate with no acceptable fix → HALT that stage and all subsequent
+ones, preserve produced assets, do not pollute `main`.
+
+## 5. Lifecycle Loop
 
 ```
 Spec (SDD) → Acceptance Tests (ATDD) → Implement → Run Tests
-           → STOP: 人工闸门 → (approve → 下一阶段 | reject → 修复/返工)
+           → STOP: human gate → (approve → next stage | reject → fix/rework)
 ```

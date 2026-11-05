@@ -2,8 +2,8 @@
 
 > **Purpose**: This glossary defines all domain-specific terms used across the **GitHub Novel Serialization Skill** project. It serves as a reference for AI agents, human contributors, and automated verification tools to ensure consistent understanding and usage of terminology.
 >
-> **Version**: 1.0.3
-> **Last Updated**: 2026-09-14
+> **Version**: 1.1.0
+> **Last Updated**: 2026-11-06
 > **License**: GPL-3.0 (infrastructure) / CC BY-NC-SA 4.0 (novel content)
 
 ---
@@ -125,13 +125,13 @@ Terms related to the file system organization and file types used in this projec
 | **dual-mode** | The design pattern used for files in the `prompts/` directory: they can be used either by AI agents (auto-invocation) or by humans (copy-paste into any AI chat window). In practice, they are designed as standalone copy-paste templates. |
 | **LICENSE** | The root-level license file (`/LICENSE`) containing the full text of the GPL-3.0 license, governing the Skill infrastructure components. Must be present at the project root. |
 | **LICENSES/** | A directory (`/LICENSES/`) containing additional license texts not included in the root LICENSE file. Currently holds `CC-BY-NC-SA-4.0.txt` for the novel content license. |
-| **meta-instruction** | A high-level directive document that instructs an AI agent on how to generate other files. `README_FOR_AI.md` is the meta-instruction/seed file for this project. |
+| **meta-instruction** | A high-level directive document that instructs an AI agent on how to generate other files. `README_FOR_AI.md` is the meta-instruction and master specification (the "S" in SDD) for this project. |
 | **method-patterns.md** | The master template file (`references/method-patterns.md`) that serves as the single source of truth for all structural templates, code patterns, and long-form methodology. If it exceeds 500 lines, it is split into sub-modules (worldbuilding, character, chapter, continuity, publishing). |
 | **module** | An independently usable sub-skill located under `modules/`, each with its own `MODULE.md` containing YAML frontmatter, triggers, and references. Modules follow the same index-only pattern as the root SKILL.md. The file is deliberately not named `SKILL.md`: skill loaders discover skills by filename and would register every module as a separate skill. |
 | **prompt template** | A structured text file in `prompts/` that, when pasted into an AI chat window, instructs the AI to perform specific tasks. Templates use `{{VARIABLE}}` placeholders for user customization. |
 | **publishing-workflow** | A functional sub-skill module (`modules/publishing-workflow/MODULE.md`) responsible for managing the Git-based publishing pipeline for serialized chapters, including tag creation, release notes, and GitHub Actions integration. |
 | **SECURITY.md** | A project policy file (`SECURITY.md`) that documents the security policy, including supported versions, vulnerability reporting procedures, response timeline expectations, and disclosure policy. |
-| **seed file** | The initial file (`README_FOR_AI.md`) that serves as the authoritative generation specification. All other project files are generated based on its instructions. |
+| **seed file** | (Legacy term) The initial file (`README_FOR_AI.md`). Its role has evolved from a self-reproducing seed into the project's single master specification — the "S" (Specification) in SDD — which defines the specification-driven development direction for the transmedia pipeline and the development-plan schema (see Section 8). All project files are generated or governed based on its instructions. |
 | **SKILL.md** | The core instruction file for a Skill. Contains YAML frontmatter (metadata) and a body with sections defining purpose, triggers, workflow, constraints, and cross-references. Only the root `SKILL.md` carries this name; module contracts are `modules/*/MODULE.md` so loaders do not register them as standalone skills. |
 | **MODULE.md** | A module contract file (`modules/*/MODULE.md`). Same structure as `SKILL.md` — frontmatter, triggers, constraints, cross-references — but named so recursive skill discovery skips it. |
 | **worldbuilding** | A functional sub-skill module (`modules/worldbuilding/MODULE.md`) responsible for generating and maintaining world-building documents, including geography, history, cultures, magic/technology systems, politics, and ecology. Note: distinct from the novel-term `world-building` (Section 1), this entry refers specifically to the module name. |
@@ -153,7 +153,26 @@ Terms related to runtime variables and template placeholders used across the pro
 
 ---
 
-## 8. Cross-Reference Index
+## 8. SDD / ATDD / Pipeline Development Terminology
+
+Terms related to the specification-driven, acceptance-test-driven, gate-reviewed development model and the transmedia pipeline introduced in `README_FOR_AI.md` (Sections 13–15).
+
+| Term | Definition |
+|------|-----------|
+| **SDD (Specification-Driven Development)** | A methodology where every task phase begins with a written specification (inputs, outputs, acceptance criteria) before any content or code is generated. The spec is the contract; generation follows it. Authorized by `docs/adr/0005-engineering-sdd-atdd.md`; see `README_FOR_AI.md` §13.1. |
+| **ATDD (Acceptance Test-Driven Development)** | A methodology where each phase declares executable acceptance tests before implementation; a phase is "done" only when its acceptance tests pass. Tests are mechanical where possible (`scan_hygiene`, `check_refs`, consistency scripts) and checklist-based otherwise. See `README_FOR_AI.md` §13.2. |
+| **S (Specification)** | The "S" in SDD. `README_FOR_AI.md` is the project's single master specification — the authoritative "S" — defining the specification-driven development direction for the transmedia pipeline and the development-plan schema. |
+| **Master Specification** | The role of `README_FOR_AI.md` as the project's single authoritative specification (the "S" in SDD). It consolidates the transmedia-pipeline specification direction (§14) and the plan schema (§15), and is exempt from the 500-line file limit. |
+| **Phase-Gated Review (Gate)** | A hard stop after a phase's acceptance tests pass: the pipeline stops and waits for explicit human review and sign-off before advancing. It does not auto-advance. See `README_FOR_AI.md` §13.3. |
+| **Go/No-Go** | A gate decision used for stages with immature tooling (comic / animation / film). If a stage fails its gate with no acceptable fix, that stage and all downstream stages halt, assets are preserved, and `main` is not polluted. See `README_FOR_AI.md` §14.8 and §15.5. |
+| **Transmedia Pipeline** | The optional staged production flow: novel → script → storyboard → comic → animation → film. Its specification direction is defined in `README_FOR_AI.md` §14; each stage follows the §13 SDD + ATDD + gate lifecycle. |
+| **specs/ directory** | Holds the per-stage executable specifications (each ≤500 lines, per §7), referenced by `README_FOR_AI.md` §14. The files are: `00-governance.md`, `01-novel.md`, `02-script.md`, `03-storyboard.md`, `04-comic.md`, `05-animation.md`, `06-film.md`, plus `README.md`. |
+| **Plan Schema** | The normative schema for development-plan documents, defined in `README_FOR_AI.md` §15. It specifies the plan metadata block (`conforms_to`, `status`), the per-stage block (goal / inputs / outputs / spec pointer / acceptance tests / gate / risk), and the acceptance-test format. A concrete instance is `docs/multimedia-pipeline-plan.md`. |
+| **state/ (continuity state)** | The novel's structured continuity state, the single source of truth consumed by every downstream pipeline stage. Downstream stages MUST consume upstream facts within `state/` and must not introduce separate state. See `README_FOR_AI.md` §14. |
+
+---
+
+## 9. Cross-Reference Index
 
 Cross-category terms — terms that span multiple domains within this project. Only terms with verified cross-references across sections are included.
 
