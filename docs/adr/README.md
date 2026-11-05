@@ -12,6 +12,7 @@ still open do not get an ADR.
 | [0002](0002-release-references-release.md) | Release files reference release files only | Accepted |
 | [0003](0003-dual-track-chapter-naming.md) | Dual-track chapter naming | Accepted |
 | [0004](0004-engineering-hygiene-no-messy-code.md) | Engineering hygiene — no messy/crappy code, no historical burden | Accepted |
+| [0005](0005-engineering-sdd-atdd.md) | SDD + ATDD phase-gated lifecycle for multi-stage generation | Accepted |
 
 ## Status values
 

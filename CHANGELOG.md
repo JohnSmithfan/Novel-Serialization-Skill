@@ -20,6 +20,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   (落盘守则) and `references/subproject-playbook.md` §7.
 - `docs/adr/0004-engineering-hygiene-no-messy-code.md`: ADR recording the
   engineering-hygiene policy (no messy/crappy code, no historical burden).
+- `docs/multimedia-pipeline-plan.md`: phased project plan for the optional
+  transmedia pipeline (novel → script → comic → animation → film) using SDD +
+  ATDD with phase-gated human review.
+- `docs/adr/0005-engineering-sdd-atdd.md`: ADR adopting Specification-Driven
+  Development (SDD) and Acceptance Test-Driven Development (ATDD) with a
+  mandatory phase-gated review for multi-stage generation work.
+- `README_FOR_AI.md` §15 *Agile Development Lifecycle*: SDD + ATDD with
+  phase-gated review, applied to the optional transmedia pipeline.
 
 ### Changed
 - **Breaking (layout):** module contracts renamed from `modules/*/SKILL.md` to

@@ -1509,3 +1509,43 @@ This Skill project is not just a collection of prompts. It is a **harness-engine
 - Generated novel content (chapters, character sheets, world-building documents) is licensed under **Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)**. See the `LICENSES/CC-BY-NC-SA-4.0.txt` file for full terms.
 
 Generate all files now. Follow every specification above. Do not improvise structure.
+
+## 15. Agile Development Lifecycle — SDD + ATDD with Phase-Gated Review
+
+This skill applies two agile practices to any multi-stage generation effort,
+including the optional transmedia pipeline (novel -> script/storyboard -> comic
+-> animation -> film). They are specified in `docs/adr/0005-engineering-sdd-atdd.md`
+and the project plan `docs/multimedia-pipeline-plan.md`.
+
+### 15.1 Specification-Driven Development (SDD)
+
+Every task phase begins with a written specification before any content or code
+is generated. The spec defines inputs, outputs, and acceptance criteria. The
+spec is the contract; generation follows it.
+
+### 15.2 Acceptance Test-Driven Development (ATDD)
+
+Before implementation, each phase declares executable acceptance tests. A phase
+is "done" only when its acceptance tests pass. Tests are checked mechanically
+where possible (for example `scan_hygiene`, `check_refs`, consistency scripts)
+and by checklist where not.
+
+### 15.3 Phase-Gated Review (stop and wait)
+
+After a phase's acceptance tests pass, the pipeline STOPS and waits for explicit
+human review and sign-off. It does NOT auto-advance to the next phase. This
+extends the existing three-stage review (三审) and verification gates: the gate
+is a hard stop, not a soft checkpoint.
+
+### 15.4 Branch strategy for multi-stage work
+
+- One `feat/pipeline-{stage}` branch per stage.
+- `main` is protected; a stage merges only after its gate sign-off.
+- The novel's continuity state (`state/`) remains the single source of truth
+  consumed by every downstream stage.
+
+### 15.5 Lifecycle loop
+
+```
+Spec (SDD) -> Acceptance Tests (ATDD) -> Implement -> Run Tests -> STOP: human gate -> (approve -> next stage | reject -> fix/rework)
+```
